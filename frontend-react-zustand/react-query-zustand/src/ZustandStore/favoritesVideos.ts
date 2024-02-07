@@ -9,12 +9,12 @@ type FavoritesVideostate={
 
 export const FavoritesVideosStore = create(persist<FavoritesVideostate>((set) =>({
     favoritesVideosId : [],
-    addFavoriteRepo:(_id:string)=>{
+    addFavoriteRepo:(_id:string )=>{
     set((state) =>({
         favoritesVideosId : [...state.favoritesVideosId, _id]
     }))}
     ,
-    removeFavoriteRepo:(_id:string)=>{ set((state) =>({favoritesVideosId : state.favoritesVideosId.filter(itemId => itemId != _id)}))}
+    removeFavoriteRepo:(_id:string )=>{ set((state) =>({favoritesVideosId : state.favoritesVideosId.filter(itemId => itemId != _id)}))}
 
 
 }), {name : 'favorite-videos'}

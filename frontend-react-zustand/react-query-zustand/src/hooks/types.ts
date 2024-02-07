@@ -3,5 +3,13 @@ export interface Video {
     title: string,
     description:string, 
     url:string,
-    theme:string
+    theme?:string
+}
+
+export interface VideoToSave {
+    _id?:string
+    title: string,
+    description:string, 
+    url:string,
+    theme?:string
 }
