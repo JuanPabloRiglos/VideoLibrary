@@ -1,0 +1,26 @@
+get http://localhost:3444/videos
+
+###
+get http://localhost:3444/videos/65a54906fff29bdcfeab8b78
+
+###
+delete http://localhost:3444/videos/65a54906fff29bdcfeab8b78
+
+###
+post http://localhost:3444/videos/
+Content-Type: application/json
+
+{
+    "title":"Mern 2 con ts por Fatz",
+    "url":"https://www.youtube.com/watch?v=wOLo-B7mrZMs",
+    "description":"Video para aprender typescrip y el Stack mern. Este consiste en el consumo de las api por React , mientras que el video anterior levantaba una base de datos mongoDB"
+}
+###
+put http://localhost:3444/videos/65a54ff9ba00dc2a96cb6e0f
+Content-Type: application/json
+
+{
+    "title":"Mern numero 1 con typeScript por Fatz",
+    "url":"https://www.youtube.com/watch?v=_RZ-T6TxP7w&t=2870s",
+    "description":"Video para aprender typescrip y el Stack mern, consiste en levantar una base de datos y consumirla mediante el uso de una aplicacion con Ract.js"
+}
