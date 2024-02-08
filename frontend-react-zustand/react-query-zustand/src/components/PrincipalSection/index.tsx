@@ -11,7 +11,7 @@ export function PrincipalSection(){
     if(isError) return (<div>{`Ups an Error : ${error.message}`}</div>) 
 
     return( 
-    <section className='w-full grid grid-cols-3 gap-3 rounded-sm shadow'>
+    <section className='w-full flex flex-wrap lg:grid grid-cols-3 gap-3 rounded-sm shadow'>
     {data?.map((item : Video) => (
     <CardToRender key={item._id} item={item}
     isInFavorites={favoritesVideosId.includes(item._id)}/>
