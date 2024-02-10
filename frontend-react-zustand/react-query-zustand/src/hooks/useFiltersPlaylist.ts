@@ -11,5 +11,12 @@ export function useFiltersPL(){
         return filteredConten
     }
 
-    return { filterForPL}
+        const getSearchResult= (arrayList :Video[], keyWord:string)=>{
+            const wordToSearch = keyWord.toLowerCase().trim()
+            
+           const filteredConten : Video[]= arrayList?.filter(item=> item.title.toLowerCase().includes(wordToSearch)|| item.description.toLowerCase().includes(wordToSearch)|| item.topyc?.toLowerCase().includes(wordToSearch))
+           return filteredConten
+        }
+
+    return { filterForPL, getSearchResult}
 }

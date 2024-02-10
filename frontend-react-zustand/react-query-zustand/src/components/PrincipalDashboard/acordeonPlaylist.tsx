@@ -26,7 +26,7 @@ export function AccordionPlayList() {
  <Accordion key={i}>
  <AccordionHeader>{platylist.name}</AccordionHeader>
  <AccordionBody>
-    <Button onClick={()=> navigate(`/search/${platylist.name}`)}> See the List </Button>
+    <Button onClick={()=> navigate(`/search/list/${platylist.name}`)}> See the List </Button>
  </AccordionBody>
 </Accordion>
         )

@@ -8,20 +8,22 @@ import { useParams } from "react-router-dom"
 //Seccion principal de renderizado de la API
 export function SearchResult(){
     const {useFetchVideos} = useApiHook()
-    const {filterForPL} = useFiltersPL()
+    const {filterForPL,getSearchResult} = useFiltersPL()
     const {data, isError, error} = useFetchVideos()
     const params = useParams()
     const [filterData , setFilterData] = useState <Video[]>()
    
     useEffect(()=>{
         let newData 
-        if(data && params.list){
-        newData = filterForPL(data, params.list)
+        if(data && params.listName){
+        newData = filterForPL(data, params.listName)
+        } else if(data && params.list){
+         newData = getSearchResult(data, params.list)
         }
       setFilterData(newData)
       
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    },[params.list])
+    },[params])
     console.log(filterData)
     if(isError) return (<div>{`Ups an Error : ${error.message}`}</div>) 
     if(filterData != undefined && filterData?.length == 0) return (<h2>No ha videos agregados a esta lista de reproduccion</h2>)

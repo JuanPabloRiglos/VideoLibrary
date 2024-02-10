@@ -20,6 +20,7 @@ function App() {
 					<Routes>
 						<Route  path='/' element={<PrincipalDashboard />} />
 						<Route path='/seAll' element={<PrincipalSection />} />
+						<Route path='/search/list/:listName' element={<SearchResult />} />
 						<Route path='/search/:list' element={<SearchResult />} />
 						<Route path='/form' element={<Form />} />
 						<Route path='/update/:id' element={<Form />} />
