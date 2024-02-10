@@ -17,7 +17,7 @@ const videoSchema = new Schema({
         trim:true, 
         unique: true
     }, 
-    theme:{type:String,
+    topyc:{type:String,
         trim:true}
 },{
     versionKey:false,

@@ -3,7 +3,7 @@ export interface Video {
     title: string,
     description:string, 
     url:string,
-    theme?:string
+    topyc?:string
 }
 
 export interface VideoToSave {
@@ -11,5 +11,12 @@ export interface VideoToSave {
     title: string,
     description:string, 
     url:string,
-    theme?:string
+    topyc?:string
+}
+
+export interface Playlist{ 
+    name: string;
+    content: {
+        id: string;
+    }[];
 }

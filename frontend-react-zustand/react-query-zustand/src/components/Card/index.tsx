@@ -1,20 +1,29 @@
 /* eslint-disable no-mixed-spaces-and-tabs */
-import { Card, Metric, Text, Button } from "@tremor/react";
+import { useState } from "react";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useNavigate } from "react-router-dom";
+import { Card, Metric, Text, Button, Badge, Select, SelectItem} from "@tremor/react";
 import Swal from "sweetalert2";
-import { FavoritesVideosStore } from "../../ZustandStore/favoritesVideos.ts";
+import { toast } from "react-toastify";
+import ReactPlayer from "react-player";
 import { Video } from "../../hooks/types.ts";
 import { deleteVideo } from "../../services.ts";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import ReactPlayer from "react-player";
-import { useNavigate } from "react-router-dom";
+import { PlaylistStore } from "../../ZustandStore/playlistStore.ts";
+import { useApiHook } from "../../hooks/useApi.ts";
 
 type PorpsCard = {
 	item: Video,
-	isInFavorites : boolean
 };
 
-export function CardToRender({ item, isInFavorites }: PorpsCard) {
-
+export function CardToRender({ item }: PorpsCard) {
+	let isDetail = ''
+	if(window.location.pathname.includes('detail')){
+		const url = (window.location.pathname).split('/')
+		 isDetail = url[1]
+	}
+	const [playListSelect, setPlayListSelect] = useState<string>('')
+	const { editedVideo } = useApiHook()
+	
 	//useNavigate
 	const navigate = useNavigate()
 	//Logica para borrado con ReactQuery
@@ -46,28 +55,46 @@ export function CardToRender({ item, isInFavorites }: PorpsCard) {
 		   });
 		}
 //trabajo de zustand
-	const {addFavoriteRepo, removeFavoriteRepo} = FavoritesVideosStore() 
-	const chekFavourites = (id:string)=>{
-	isInFavorites? removeFavoriteRepo(id)
-	: addFavoriteRepo(id)
- }
+	const {addVideoToList} = PlaylistStore() 
+	const {playlists} =PlaylistStore()
+
+
+const addToPlayListHandler = (listName:string, item : Video) =>{
+	 const videoForEdit : Video = { ...item, topyc:listName}
+	editedVideo.mutate(videoForEdit)
+    toast.success('Video edited whit succes!')
+	addVideoToList(listName, item._id)
+}
 
 	return (
-		<div key={item._id} className="w-full h-full min-w-80 m-auto">
-			<Card className='w-4/5 h-full flex flex-col justify-around gap-4 cursor-pointer hover:border-2' >
-				<Metric onClick={()=> navigate(`/update/${item._id}`)}>{item.title}</Metric>
+		<div key={item._id} className="w-full h-full min-w-80 ">
+			<Card className='w-11/12 h-full m-auto flex flex-col justify-around gap-3 cursor-pointer hover:border-2' >
+				<Metric onClick={()=> navigate(`/detail/${item._id}`)}>{item.title}</Metric>
 				<Text>{item.description}</Text>
 				<div className="">
 
 				<ReactPlayer style={{maxWidth:'100%', borderRadius:'50px' }} url={item.url}/>	
 				</div>
 				<div className="flex justify-between "> 
-				<Button size="sm" variant="primary" onClick={()=> chekFavourites(item._id)}>
-					{isInFavorites? 'Remove of Favorites' : 'Add to favorites'}
-				</Button>
+				{item.topyc ?  <Badge>{`In ${item.topyc} playlist`}</Badge> :
+						<div className=" w-3/5 space-y-6">
+							<Select className="w-full" value={playListSelect} onValueChange={setPlayListSelect}>
+							{ playlists.map(list=>
+								<SelectItem value={list.name} onClick={()=> addToPlayListHandler(list.name, item)}>
+									{list.name}
+								</SelectItem>
+							)
+						}
+						</Select>
+						</div>}
+					{isDetail && <Button size="sm" variant="primary" onClick={() => navigate(`/update/${item._id}`)}>
+								Edit Video
+							</Button>}
+							
 				<Button size="sm" variant="primary" color="red" onClick={()=> SweetAlertForDelete(item._id)}>
 					Delete
-				</Button></div>
+				</Button>
+				</div>
 			</Card>
 		</div>
 	);

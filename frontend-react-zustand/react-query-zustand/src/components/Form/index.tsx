@@ -1,48 +1,42 @@
-import { Card, Text, TextInput, Textarea, Button } from "@tremor/react";
+import { Card, Text, TextInput, Textarea, Button, Select, SelectItem } from "@tremor/react";
 import { useState , ChangeEvent ,FormEvent, useEffect} from "react";
 import { useNavigate , useParams} from "react-router-dom";
 import { toast } from "react-toastify";
 import { Video, VideoToSave } from "../../hooks/types";
-import { useMutation , useQueryClient} from  '@tanstack/react-query';
-import { addVideo , getOneVideo} from "../../services";
-import { updatedVideo } from "../../services"; 
-
-
+import { useApiHook } from "../../hooks/useApi";
+import { PlaylistStore } from "../../ZustandStore/playlistStore";
 
 export function Form(){
+  const {playlists}= PlaylistStore()
+  // const {addVideoToList}= PlaylistStore()
   const navigate = useNavigate()
   const params = useParams()
   const initialState : VideoToSave = { title: '',
   description:'', 
-  url:''}
+  url:'', 
+topyc:''}
     const [video, setVideo] = useState<VideoToSave | Video>(initialState)
-
-    const getVideo = async (id:string)=>{
-      const res : Video  = await getOneVideo(id)
-      const {title, url, description, _id} = res
-      setVideo({title, url, description, _id})
-      
-    }
-
+  const {editedVideo, useAddVideo, getVideo} = useApiHook()
+ 
     useEffect(()=>{
-      if(params.id){ getVideo(params.id)
+
+      async function fetchVideoToEditData() {
+        if(params.id){ 
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
+          const response : Video = await getVideo(params.id)
+          .then(response => setVideo(response))
+        }
       }
+       fetchVideoToEditData();
+      
     },[params])
-
-
-    // logica para React Query Agrege video. 
-    const queryClient = useQueryClient()//necesario para renovar la data del cache
-    const useAddVideo = useMutation({mutationFn: addVideo, 
-        onSuccess:()=>{ queryClient.invalidateQueries({ queryKey: ['videos'] })}// compara el cache con la db, si hay cambios, pide data de nuevo  se renderiza en el useFetchVideos.
-})
-
-    //funcion para editar video 
-    const editedVideo = useMutation({mutationFn: updatedVideo, 
-        onSuccess:()=>{ queryClient.invalidateQueries({ queryKey: ['videos'] })}// compara el cache con la db, si hay cambios, pide data de nuevo  se renderiza en el useFetchVideos.
-})
 
     const inputHandler =(e : ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>{
         setVideo({...video, [e.target.name] : e.target.value})
+    }
+
+    const handlerTopyc = (value : string)=>{
+      setVideo({ ...video , topyc: value})
     }
 
     const handlerSubmit = (e : FormEvent<HTMLFormElement>) =>{
@@ -54,18 +48,14 @@ export function Form(){
         editedVideo.mutate(video)
          toast.success('Video edited whit succes!')
        }
-
-
         setVideo(initialState)
         navigate('/')
-
     }
-
-    console.log(video)
+ 
     return(
      <Card className="max-w-xs mx-auto my-3" decoration="top" decorationColor="indigo">
       <Text>Add New Video</Text>
-        <form className="flex flex-col gap-4" onSubmit={ handlerSubmit}>
+        <form className="flex flex-col gap-4" onSubmit={ handlerSubmit} >
         <TextInput placeholder="Select a video Title..." name="title" value={video.title}  onChange={inputHandler} autoFocus/>
         <TextInput placeholder="Insert the video's URL"  name="url" value={video.url}  onChange={inputHandler}/>
         <div className="flex flex-col gap-2">
@@ -80,12 +70,26 @@ export function Form(){
            onChange={inputHandler}
         />
       </div>
-    { params.id ? <Button className="mt-2" variant="secondary" type="submit">
+						<div className=" w-3/5 space-y-6">
+							<Select className="w-full"
+               value={video.topyc}
+               >
+							{ playlists.map(list=>
+								<SelectItem value={list.name} onClick={()=> handlerTopyc(list.name)}>
+									{list.name}
+								</SelectItem>
+							)
+      }
+      </Select>
+      </div>
+{ 
+    params.id ? <Button className="mt-2" variant="secondary" type="submit">
         Save Changes
       </Button>:
       <Button className="mt-2" variant="light" type="submit">
         Submit
-      </Button>}
+      </Button>
+      }
         </form>
      </Card>
 );
