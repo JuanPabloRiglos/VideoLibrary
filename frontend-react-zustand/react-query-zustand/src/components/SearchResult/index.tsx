@@ -7,7 +7,7 @@ import { Video } from "../../hooks/types"
 import { CardToRender } from "../Card"
 
 //Seccion principal de renderizado de la API
-export function SearchResult(){
+export default function SearchResult(){
     const {useFetchVideos} = useApiHook()
     const {filterForPL,getSearchResult} = useFiltersPL()
     const {allVideosDb : data} = PlaylistStore()

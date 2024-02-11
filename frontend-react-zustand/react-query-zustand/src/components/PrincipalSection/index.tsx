@@ -4,7 +4,7 @@ import { Video } from "../../hooks/types"
 import { CardToRender } from "../Card"
 
 //Seccion principal de renderizado de la API
-export function PrincipalSection(){
+export default function PrincipalSection(){
     const {useFetchVideos} = useApiHook()
     const {data, isError, error} = useFetchVideos()
    

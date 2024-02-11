@@ -6,7 +6,7 @@ import { Video, VideoToSave } from "../../hooks/types";
 import { useApiHook } from "../../hooks/useApi";
 import { PlaylistStore } from "../../ZustandStore/playlistStore";
 
-export function Form(){
+export default function Form(){
   const {playlists}= PlaylistStore()
   // const {addVideoToList}= PlaylistStore()
   const navigate = useNavigate()

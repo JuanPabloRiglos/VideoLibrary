@@ -4,7 +4,7 @@ import { AccordionPlayList } from "./acordeonPlaylist";
 import { MiniCard } from "./miniCard";
 import { SercherComponent } from "./sercherComponent";
 
-export function PrincipalDashboard (){
+export default function PrincipalDashboard (){
     const {useFetchVideos} = useApiHook()
     const {data, isLoading} = useFetchVideos()
 

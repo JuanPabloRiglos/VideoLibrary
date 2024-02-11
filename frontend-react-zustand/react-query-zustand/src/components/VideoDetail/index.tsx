@@ -17,7 +17,7 @@ url:'',
 topyc:''}
 
 
-export function VideoDetail(){
+export default function VideoDetail(){
 
   const [playListSelect, setPlayListSelect] = useState<string>('')
     const [videoDetail, setVideoDetail]= useState<Video>(initialState)
@@ -58,7 +58,7 @@ export function VideoDetail(){
 				<ReactPlayer style={{maxWidth:'100%'}} url={videoDetail.url}/>	
         </div>
 				
-				<section className="w-4/5 m-auto lg:w-2/5 h-full m-auto flex flex-col gap-10"> 
+				<section className="w-4/5 m-auto lg:w-2/5 h-full flex flex-col gap-10"> 
 				<Metric className="h-1/6 align-top mb-3">{videoDetail.title}</Metric>
 				<Text className="h-3/6 align-top mb-3">{videoDetail.description}</Text>
         <div className=" h-fit flex flex-wrap lg:h-2/6 align-top gap-3  justify-around"> 
