@@ -3,7 +3,7 @@ import api from './baseAPI'
 
     //axios, lista todo la db
   export const fetchVideos = async () =>{
-    const {data}= await api.get<Video[]>(`/`)
+    const {data}= await api.get<Promise<Video[]>>(`/`)
     return data
 }
 

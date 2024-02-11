@@ -1,5 +1,5 @@
-import { useQuery } from '@tanstack/react-query'
-import { fetchVideos, updatedVideo, addVideo, getOneVideo} from '../services'
+import { UseQueryResult, useQuery } from '@tanstack/react-query'
+import { fetchVideos, updatedVideo, addVideo, getOneVideo, deleteVideo} from '../services'
 import { useMutation , useQueryClient} from  '@tanstack/react-query';
 import { Video } from './types';
 export function useApiHook(){
@@ -14,7 +14,7 @@ const useAddVideo = useMutation({mutationFn: addVideo,
     onSuccess:()=>{ queryClient.invalidateQueries({ queryKey: ['videos'] })}// compara el cache con la db, si hay cambios, pide data de nuevo  se renderiza en el useFetchVideos.
 })
 
- function useFetchVideos(){
+ function useFetchVideos(): UseQueryResult<Video[]>{
     return useQuery( {queryKey:['videos'], queryFn:fetchVideos})
 }
 
@@ -25,7 +25,11 @@ const getVideo = async (id:string)=>{
     return videoToShow
   }
 
-return{ editedVideo, useFetchVideos, useAddVideo, getVideo}
+  const  deleteVideoMutation = useMutation({mutationFn:deleteVideo, onSuccess : ()=>{
+    queryClient.invalidateQueries({queryKey:['videos']})
+}})
+
+return{ editedVideo, useFetchVideos, useAddVideo, getVideo, deleteVideoMutation}
 }
 
 // export function useAddVideo (){ return useMutation({mutationFn: addVideo})} -> lo tuve que aplicar directamente en el form

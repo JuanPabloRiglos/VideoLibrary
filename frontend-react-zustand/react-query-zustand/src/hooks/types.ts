@@ -3,7 +3,7 @@ export interface Video {
     title: string,
     description:string, 
     url:string,
-    topyc?:string
+    topyc:string
 }
 
 export interface VideoToSave {

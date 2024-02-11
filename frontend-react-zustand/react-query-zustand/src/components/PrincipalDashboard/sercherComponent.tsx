@@ -8,8 +8,6 @@ export function SercherComponent () {
   const navigate= useNavigate()
   const [searchBy, setSearchBy] = useState<string>('')
 
-  console.log(searchBy)
-
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const debounceSearchVideos = useCallback(debounce((searchBy: string)=>{
     navigate(`/search/${searchBy}`)
@@ -18,7 +16,7 @@ export function SercherComponent () {
   [])
 
    return (
-  <Card className="w-10/12 h-4/5 p-auto  row-start-1 row-end-2 mx-auto " decoration="top" decorationColor="indigo">
+  <Card className="w-10/12 h-5/5 p-auto -mt-3 m-auto " decoration="top" decorationColor="indigo">
     <TextInput  placeholder="Search..." icon={SearchIcon} value={searchBy} onChange={(e: ChangeEvent<HTMLInputElement>)=>setSearchBy(e.target.value)} onKeyDown={()=>debounceSearchVideos(searchBy)}/>
   </Card>
 
