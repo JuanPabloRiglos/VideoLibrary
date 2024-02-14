@@ -1,6 +1,8 @@
-import { Avatar, Box, Modal, TextField } from "@mui/material";
-import {Button} from '@tremor/react'
 import { useState } from "react";
+import {useForm, SubmitHandler } from 'react-hook-form'
+import { Avatar, Box, Modal, TextField } from "@mui/material";
+import {Button} from '@tremor/react';
+
 
 const style = {
     position: 'absolute',
@@ -13,48 +15,70 @@ const style = {
     pt: 2,
     px: 4,
     pb: 3,
-  };
+  };// no boorrar, son estilos
+
+  type Inputs = {
+    userName: string,
+    email: string,
+    password: string,
+    repeatPassword:string,
+    img:string
+  }
+  
+
   
    export function RegisterForm() {
+    
+//     const {passwordValidate} = useFormControls()
     const [open, setOpen] = useState(false);
-    const handleOpen = () => {
-      setOpen(true);
-    };
-    const handleClose = () => {
-      setOpen(false);
-    };
-  
+    const toggleOpen = (trueOrFalse:boolean) => setOpen(trueOrFalse);// maneja el open o close del modal
+
+const {register, handleSubmit, formState:{errors}} = useForm<Inputs>()
+
+console.log(errors)
+const localHandleSubmit : SubmitHandler<Inputs> =(data) => console.log(data)
+
     return (
       <>
         <Button className="border-2 border-cyan-600 bg-violet-900
-         hover:border-violet-900 hover:bg-cyan-600" onClick={handleOpen}>Go to Register Form</Button>
+         hover:border-violet-900 hover:bg-cyan-600" onClick={()=>toggleOpen(true)}>Go to Register Form</Button>  
+         {/* se renderiza en loggInForm */}
         <Modal
           open={open}
-          onClose={handleClose}
+          onClose={()=>toggleOpen(false)}
           aria-labelledby="child-modal-title"
           aria-describedby="child-modal-description"
         >
-          <Box sx={{ ...style, width: 800, height:275 }}> Create your account
+          <Box sx={{ ...style, width:{ xs:300, sm:500 , md:600, lg:800}, height:{xs:400,md:275} }}>
+            <h2 className=" text-xl font-bold" >Create your account </h2> 
           
-            {/* <h2 id="child-modal-title">Text in a child modal</h2>
-            <p id="child-modal-description">
-              Lorem ipsum, dolor sit amet consectetur adipisicing elit.
-            </p> */}
-            <form className="flex flex-col gap-3 flex-wrap">
-                <div className=" w-full flex justify-around">
-            <TextField type="text" label="User name" variant="standard" autoFocus/>
-            <TextField id="standard-basic" label="write your email" variant="standard" />
+            <form className="flex flex-col gap-3 flex-wrap" onSubmit={handleSubmit(localHandleSubmit)}>
+
+                <div className=" w-full flex flex-col md:flex-row justify-around">
+                <article className="flex flex-col">  
+            <TextField  type="text" label="Introduce your name" variant="standard" autoFocus {...register("userName", {required:{value: true, message: "The fiedl can't be empty"}, minLength:{value:3, message:'You most write 3 leters at least'} })} /> 
+            {errors.userName && <span className=" font-thin text-red-600">{errors.userName.message}</span>}
+             </article>
+             <article>
+             <TextField type="email" label="write your email" variant="standard" {...register("email",{ required: {value: true, message:'Debes escribir tu correo electronico'}})} />
+             {errors.email && <span className="font-thin text-red-600">{errors.email.message}</span>}
+             </article>
             </div>
-            <div className=" w-full flex justify-around">
-            <TextField id="standard-basic" type="password" label="Passwor" variant="standard" />
-            <TextField id="standard-basic" type="password" label="Repeat password" variant="standard" />
+            <div className=" w-full flex flex-col md:flex-row justify-around">
+            <TextField type="password" label="Passwor" variant="standard" {...register("password", { required: true })}/>
+
+
+            <TextField type="password"   label="Repeat password" variant='standard' {...register("repeatPassword", {  required: true})}/>
             </div>
             <div className=" flex justify-center gap-4">
             <Avatar style={{marginTop:'10px'}} src="/broken-image.jpg" />
-            <TextField id="standard-basic" label="Charge your perfil image" variant="standard" />
+
+
+            <TextField type="text" label="Charge your perfil image" variant="standard" {...register("img")} /> 
+            {/* el tipe debe ser file */}
             </div>
             <Button className=" w-1/2 m-auto border-2 border-cyan-600 bg-violet-900
-         hover:border-violet-900 hover:bg-cyan-600" onClick={handleClose}>Registrate</Button>
+         hover:border-violet-900 hover:bg-cyan-600"> Registrate</Button>
             </form>
           </Box>
         </Modal>
