@@ -38,7 +38,7 @@ console.log(errorInFo)
         open={open}
         onClose={()=>setOpen(!open)}
       >
-        <div className=' w-4/5 h-4/5  m-auto mt-10 border-0 flex flex-col-reverse md:flex-row lg:flex-row xl:flex-row rounded-lg overflow-auto md:overflow-hidden'> 
+        <div className=' w-4/5 h-4/5 m-auto mt-10 border-0 flex flex-col-reverse md:flex-row lg:flex-row xl:flex-row rounded-lg overflow-auto md:overflow-hidden'> 
           <div className='w-full min-h-fit md:w-1/2 h-full bg-tremor-background sm:bg-violet-900 rounded-sm animate-fade-right box-content'>
           <article className='w-full rounded-md sm:w-4/5 bg-violet-900 sm:bg-tremor-background min-h-fit sm:h-5/6 md:h-4/5 m-auto sm:mt-5 md:my-14 box-border flex flex-col justify-around'>
       <CardContent>
@@ -59,8 +59,8 @@ Know us!
       </CardContent>
     </article>
           </div>
-          <div className='w-full min-h-fit md:w-1/2 h-full bg-tremor-background rounded-sm animate-fade-left'>
-          <Card className='w-4/5 min-h-fit sm:h-4/5 md:h-4/5 m-auto my-2 md:mt-14 '>
+          <div className='w-full  md:w-1/2 h-full bg-tremor-background rounded-sm animate-fade-left'>
+          <Card className='w-4/5 sm:h-4/5 md:h-4/5 m-auto my-2 md:mt-14 '>
             <form className='flex flex-col gap-5'>
             <div className="flex flex-col">
             <TextField onChange={handlerUserLogin} type="text" value={userLoggIn.userEmail} label="Enter your email address" name='userEmail' color={errorInFo && userLoggIn.userEmail == '' ? 'error' :"secondary"} focused autoFocus/>
