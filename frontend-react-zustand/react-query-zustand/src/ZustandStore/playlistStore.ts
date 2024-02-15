@@ -37,7 +37,6 @@ export const PlaylistStore = create(persist<PlaylistState>((set, get)=>({
             //para que no ejecute la funcion addVideoToList sin un nombre de PL
            if(item.topyc != '') {addVideoToList(item.topyc, item._id)}
         })
-        console.log(copyDb)
     },
          //add new lists
    addPlaylist : ( newList:string )=>{

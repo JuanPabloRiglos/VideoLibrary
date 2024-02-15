@@ -1,5 +1,5 @@
 export interface userLogginState{
-    userNameOrEmail: string,
+    userEmail: string,
     userPassword: string
 }
 

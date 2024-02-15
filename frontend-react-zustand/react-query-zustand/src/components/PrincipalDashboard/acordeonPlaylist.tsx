@@ -15,7 +15,6 @@ export function AccordionPlayList() {
   const {SweetAlertDeletePL}= useSweetAlert()
 
 useEffect(()=>{
-  console.log('Cargo')
   sincreonizeListContent()
 },[addPlaylist])
 

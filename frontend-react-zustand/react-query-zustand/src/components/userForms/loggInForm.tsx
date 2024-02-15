@@ -1,31 +1,37 @@
+import { ChangeEvent,MouseEvent, useEffect, useState } from 'react';
 import { Modal, CardContent, Typography, CardActions, Button, TextField} from '@mui/material/';
 import { useNavigate } from 'react-router-dom';
 import Fingerprint from '@mui/icons-material/Fingerprint';
 import { Card } from '@tremor/react';
 import { RegisterForm } from '../userForms/registerForm';
-import { ChangeEvent,MouseEvent, useState } from 'react';
 import { userLogginState } from '../../hooks/types.users';
+import { UserStore } from '../../ZustandStore/userStore';
+import { useFormControls } from '../../hooks/useFormControls';
 
-
+const userLoggInInitialValue : userLogginState = {userEmail:'', userPassword:''}
 
 export function ModalToUserHandler() {
-    const navigate = useNavigate()
+  const navigate = useNavigate()
+  const {isEmail} = useFormControls()
+  const {newUser} = UserStore()
   const [open, setOpen] = useState(true);
-  const [userLoggIn, setUserLoggIn] = useState<userLogginState>({userNameOrEmail:'', userPassword:''})
-  const [errorInFo, setErrorInfo] = useState<boolean>(false)
+  const [userLoggIn, setUserLoggIn] = useState<userLogginState>(userLoggInInitialValue)
+  const [errorInFo, setErrorInfo] = useState<string>('')
 
   const handlerUserLogin = (e:ChangeEvent<HTMLInputElement>) =>{
     setUserLoggIn({...userLoggIn, [e.target.name]: e.target.value})
   }
-//   console.log('user loggin :')
-//   console.log(userLoggIn)
 
   const handlerLoggInInfo = (e : MouseEvent<HTMLButtonElement> ) =>{
     e.preventDefault
-    !userLoggIn.userNameOrEmail  && setErrorInfo(true)
-    !userLoggIn.userPassword  && setErrorInfo(true)
-   
+    !userLoggIn.userEmail ? setErrorInfo('Debes completar el campo') : ( isEmail(userLoggIn.userEmail) == false && setErrorInfo('El correo no es valido'))
+    !userLoggIn.userPassword  && setErrorInfo('Debes completar el campo')
 }
+useEffect(()=>{
+  setUserLoggIn(newUser)
+  console.log(newUser)
+},[newUser])
+console.log(errorInFo)
   return (
     <div className='border-2 rounded-lg'>
       <Modal
@@ -37,7 +43,7 @@ export function ModalToUserHandler() {
           <article className='w-full rounded-md sm:w-4/5 bg-violet-900 sm:bg-tremor-background min-h-fit sm:h-5/6 md:h-4/5 m-auto sm:mt-5 md:my-14 box-border flex flex-col justify-around'>
       <CardContent>
       <Typography sx={{ display:{xs:'block', sm:'block', md:'none', lg:'none', xl:'none'}, color:{xs:'white', sm:'black'}}} gutterBottom variant="h6" component="div">
-         AppList
+         VidoAppList
         </Typography>
         <Typography sx={{display:{xs:'none', sm:'none', md:'block', lg:'block', xl:'block', }}} gutterBottom variant="h5" component="div">
           Your Fauvorite Video List App
@@ -48,7 +54,7 @@ Know us!
         </Typography>
       <CardActions>
       {/* border-cyan-600 bg-violet-900 */}
-        <div className='border-2 rounded-md border-cyan-600 sm:border-violet-900 font-semibold   text-cyan-600 sm:text-slate-100 p-1 w-3/5 sm:2/5 flex flex-nowrap justify-center bg-tremor-background sm:bg-cyan-600' onClick={()=> navigate('/seAll')} >See all</div>
+        <div className='mx-auto border-2 rounded-md border-cyan-600 sm:border-violet-900 font-semibold   text-cyan-600 sm:text-slate-100 p-1 w-3/5 sm:2/5 flex flex-nowrap justify-center bg-tremor-background sm:bg-cyan-600' onClick={()=> navigate('/seAll')} >See all</div>
       </CardActions>
       </CardContent>
     </article>
@@ -56,10 +62,12 @@ Know us!
           <div className='w-full min-h-fit md:w-1/2 h-full bg-tremor-background rounded-sm animate-fade-left'>
           <Card className='w-4/5 min-h-fit sm:h-4/5 md:h-4/5 m-auto my-2 md:mt-14 '>
             <form className='flex flex-col gap-5'>
+            <div className="flex flex-col">
+            <TextField onChange={handlerUserLogin} type="text" value={userLoggIn.userEmail} label="Enter your email address" name='userEmail' color={errorInFo && userLoggIn.userEmail == '' ? 'error' :"secondary"} focused autoFocus/>
+              {errorInFo == 'El correo no es valido'&& <span className=" pl-3 my-1 text-xs font-semibold text-red-700"> El correo no es valido</span>}
+            </div>
 
-            <TextField onChange={handlerUserLogin} type="text" label="Enter your email address" name='userNameOrEmail' color={errorInFo && userLoggIn.userNameOrEmail == '' ? 'error' :"secondary"} focused autoFocus/>
-
-            <TextField  onChange={handlerUserLogin} type='password' label="Your password" name='userPassword' color={errorInFo && !userLoggIn.userPassword ? 'error' :"secondary"} focused />
+            <TextField  onChange={handlerUserLogin} value={userLoggIn.userPassword} type='password' label="Your password" name='userPassword' color={errorInFo && !userLoggIn.userPassword ? 'error' :"secondary"} focused />
 
             <Button style={{display:'flex', gap:'8px'}} aria-label="fingerprint" color="secondary" onClick={handlerLoggInInfo}>
           Loggin
