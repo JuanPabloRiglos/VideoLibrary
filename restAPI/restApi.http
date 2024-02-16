@@ -4,7 +4,7 @@ get http://localhost:3444/videos
 get http://localhost:3444/videos/65a54906fff29bdcfeab8b78
 
 ###
-delete http://localhost:3444/videos/65a54906fff29bdcfeab8b78
+delete http://localhost:3444/videos/
 
 ###
 post http://localhost:3444/videos/
@@ -24,3 +24,15 @@ Content-Type: application/json
     "url":"https://www.youtube.com/watch?v=_RZ-T6TxP7w&t=2870s",
     "description":"Video para aprender typescrip y el Stack mern, consiste en levantar una base de datos y consumirla mediante el uso de una aplicacion con Ract.js"
 }
+
+###
+post http://localhost:3444/users/
+Content-Type: application/json
+
+{
+    "name":"Juan",
+    "email":"juan.riglos@hotmail.com",
+    "password":"123456"
+}
+###
+get http://localhost:3444/users

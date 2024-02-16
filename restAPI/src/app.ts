@@ -1,6 +1,7 @@
 import  express, { urlencoded }  from "express";
 import cors  from "cors";
-import videoRoutes from './routes/videos.rutes'
+import videoRoutes from './routes/videos/videos.rutes';
+import userRoutes from './routes/users/users.rutes'
 import morgan from "morgan";
 const app = express();
 
@@ -12,6 +13,7 @@ app.use(express.json())
 app.use(express.urlencoded({extended:false}))
 
 //routes
-app.use(videoRoutes)
+app.use('/videos', videoRoutes)
+app.use('/users', userRoutes)
 
 export default app
