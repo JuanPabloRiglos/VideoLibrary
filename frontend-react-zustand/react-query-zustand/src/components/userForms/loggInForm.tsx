@@ -1,37 +1,43 @@
-import { ChangeEvent,MouseEvent, useEffect, useState } from 'react';
-import { Modal, CardContent, Typography, CardActions, Button, TextField} from '@mui/material/';
 import { useNavigate } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import {useForm, SubmitHandler } from 'react-hook-form';
+import { Modal, CardContent, Typography, CardActions, Button, TextField} from '@mui/material/';
 import Fingerprint from '@mui/icons-material/Fingerprint';
 import { Card } from '@tremor/react';
 import { RegisterForm } from '../userForms/registerForm';
-import { userLogginState } from '../../hooks/types.users';
 import { UserStore } from '../../ZustandStore/userStore';
-import { useFormControls } from '../../hooks/useFormControls';
+// import { userLogginState } from '../../hooks/types.users';
+import { getOneUser } from '../../services';
 
-const userLoggInInitialValue : userLogginState = {userEmail:'', userPassword:''}
+type LoginInputs = {
+  email: string,
+  password: string,
+ 
+}
 
 export function ModalToUserHandler() {
+  const [apiError, setApiError ] = useState<string>('')
+  const {userLogged} = UserStore()
   const navigate = useNavigate()
-  const {isEmail} = useFormControls()
-  const {newUser} = UserStore()
-  const [open, setOpen] = useState(true);
-  const [userLoggIn, setUserLoggIn] = useState<userLogginState>(userLoggInInitialValue)
-  const [errorInFo, setErrorInfo] = useState<string>('')
-
-  const handlerUserLogin = (e:ChangeEvent<HTMLInputElement>) =>{
-    setUserLoggIn({...userLoggIn, [e.target.name]: e.target.value})
-  }
-
-  const handlerLoggInInfo = (e : MouseEvent<HTMLButtonElement> ) =>{
-    e.preventDefault
-    !userLoggIn.userEmail ? setErrorInfo('Debes completar el campo') : ( isEmail(userLoggIn.userEmail) == false && setErrorInfo('El correo no es valido'))
-    !userLoggIn.userPassword  && setErrorInfo('Debes completar el campo')
-}
+  // const {newUser} = UserStore()
+  const {addUserLogged} = UserStore()
+  const [open, setOpen] = useState(userLogged.email !=''? false :true);
 useEffect(()=>{
-  setUserLoggIn(newUser)
-  console.log(newUser)
-},[newUser])
-console.log(errorInFo)
+  
+},[apiError])
+const {register, handleSubmit, formState:{errors}} = useForm<LoginInputs>()
+
+  const logginSubmit : SubmitHandler <LoginInputs>= async (loggData)=>{ 
+   
+    !errors
+     await getOneUser(loggData).then(data=> {
+
+        data.email == undefined ||  data.email == null ? setApiError('La direccion de Correo no se ha encontrado en la Base de Datos. Pruebe sin mayusculas'):
+       ( data.password != loggData.password ? setApiError('La contaseña no coincide con la guardada en la base de datos'):
+        addUserLogged(data))     
+    } )
+}
+
   return (
     <div className='border-2 rounded-lg'>
       <Modal
@@ -61,21 +67,29 @@ Know us!
           </div>
           <div className='w-full  md:w-1/2 h-full bg-tremor-background rounded-sm animate-fade-left'>
           <Card className='w-4/5 sm:h-4/5 md:h-4/5 m-auto my-2 md:mt-14 '>
-            <form className='flex flex-col gap-5'>
+            <form onSubmit={handleSubmit(logginSubmit)} className='flex flex-col gap-5'>
             <div className="flex flex-col">
-            <TextField onChange={handlerUserLogin} type="text" value={userLoggIn.userEmail} label="Enter your email address" name='userEmail' color={errorInFo && userLoggIn.userEmail == '' ? 'error' :"secondary"} focused autoFocus/>
-              {errorInFo == 'El correo no es valido'&& <span className=" pl-3 my-1 text-xs font-semibold text-red-700"> El correo no es valido</span>}
+            <TextField  type="text" label="Enter your email address"  {...register("email",{ required: {value: true, message:'Debes escribir tu correo electronico'}, pattern:{value: /\S+@\S+\.\S+/, message:'Te email most be valid'} })}
+             color={  errors.email? 'error' :"secondary"} 
+           
+             focused autoFocus/>
+               {errors.email && <span className=" flex text-center text-xs font-semibold text-red-700">{errors.email.message}</span>}
             </div>
-
-            <TextField  onChange={handlerUserLogin} value={userLoggIn.userPassword} type='password' label="Your password" name='userPassword' color={errorInFo && !userLoggIn.userPassword ? 'error' :"secondary"} focused />
-
-            <Button style={{display:'flex', gap:'8px'}} aria-label="fingerprint" color="secondary" onClick={handlerLoggInInfo}>
+            <div className="flex flex-col justify-around">
+            <TextField  type='password' label="Your password"
+             color={errors.password? 'error' :"secondary"} 
+            {...register("password", { required: {value:true, message:'Debes completar el campo'}, minLength:{value:6, message: 'La contraseña debe contener al menos 6 caracteres'}})}
+             focused />
+              {errors.password && <span className="pl-0 flex text-xs font-semibold text-red-700">{errors.password.message}</span>}
+              {apiError.length > 0 && <span className="pl-0 flex text-xs font-semibold text-red-700">{apiError}</span>}
+              </div>
+            <Button type='submit' style={{display:'flex', gap:'8px'}} aria-label="fingerprint" color="secondary">
           Loggin
         <Fingerprint />
       </Button>
             </form>
             <div className='my-8 flex flex-col gap-2 align-middle'>
-            <h3 className='m-auto font-semibold'> You do not have an account?</h3>
+            <h3 className='m-auto font-semibold'> You don't have an account?</h3>
             <RegisterForm /> 
             </div>
             </Card>

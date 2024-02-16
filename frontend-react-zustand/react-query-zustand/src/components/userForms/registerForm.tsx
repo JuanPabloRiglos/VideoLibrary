@@ -1,8 +1,9 @@
 import { useState } from "react";
 import {useForm, SubmitHandler, useWatch } from 'react-hook-form'
-import { UserStore } from "../../ZustandStore/userStore";
 import { Avatar, Box, Modal, TextField } from "@mui/material";
 import {Button} from '@tremor/react';
+import { UserStore } from "../../ZustandStore/userStore";
+import { addUser } from "../../services";
 
 
 const style = {
@@ -19,7 +20,7 @@ const style = {
   };// no boorrar, son estilos
 
   type Inputs = {
-    userName: string,
+    name: string,
     email: string,
     password: string,
     repeatPassword:string,
@@ -41,8 +42,10 @@ const principalPassword = useWatch({
 const localHandleSubmit : SubmitHandler<Inputs> =(newUser) =>{ 
   console.log(newUser)
 //logica para que pegue a la api
-  setNewUser(newUser.email, newUser.password)
- toggleOpen(false)}
+  addUser(newUser)//agrega a db
+  setNewUser(newUser.email, newUser.password)// setea en store ultimo agregado
+ toggleOpen(false)//cierra modal
+}
     return (
       <>
         <Button className="border-2 border-cyan-600 bg-violet-900
@@ -61,8 +64,8 @@ const localHandleSubmit : SubmitHandler<Inputs> =(newUser) =>{
 
                 <div className=" w-full flex flex-col gap-3 md:flex-row justify-around">
                 <article className="flex flex-col">  
-            <TextField  type="text" label="Introduce your name" variant="standard" autoFocus {...register("userName", {required:{value: true, message: "The fiedl can't be empty"}, minLength:{value:3, message:'You most write 3 leters at least'} })} /> 
-            {errors.userName && <span className="flex text-center text-xs font-semibold text-red-700">{errors.userName.message}</span>}
+            <TextField  type="text" label="Introduce your name" variant="standard" autoFocus {...register("name", {required:{value: true, message: "The fiedl can't be empty"}, minLength:{value:3, message:'You most write 3 leters at least'} })} /> 
+            {errors.name && <span className="flex text-center text-xs font-semibold text-red-700">{errors.name.message}</span>}
              </article>
              <article className="flex flex-col">
              <TextField type="email" label="write your email" variant="standard" {...register("email",{ required: {value: true, message:'Debes escribir tu correo electronico'}, pattern:{value: /\S+@\S+\.\S+/, message:'Te email most be valid'} })} />

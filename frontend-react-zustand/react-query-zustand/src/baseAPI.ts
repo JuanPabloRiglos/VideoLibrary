@@ -1,7 +1,9 @@
 import axios from "axios";
 
-const api = axios.create({
+export const api = axios.create({
     baseURL :'http://localhost:3444/videos'
 });
 
-export default api
+export const apiUsers = axios.create({
+    baseURL :'http://localhost:3444/users'
+});

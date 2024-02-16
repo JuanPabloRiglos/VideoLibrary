@@ -4,12 +4,17 @@ import { AccordionPlayList } from "./acordeonPlaylist";
 import { MiniCard } from "./miniCard";
 import { SercherComponent } from "./sercherComponent";
 import { ModalToUserHandler } from "../userForms/loggInForm";
+import { UserStore } from "../../ZustandStore/userStore";
 
 
 export default function PrincipalDashboard (){
+    const {userLogged}= UserStore()
     const {useFetchVideos} = useApiHook()
     const {data, isLoading} = useFetchVideos()
   
+    console.log('usuario logeado')
+    console.log(userLogged)
+
     return(
         <section className="h-dvh w-4/5 mx-auto flex flex-col md:w-full md:grid grid-cols-2 ">
             <div className="grid gird-row-2 p-1">
@@ -33,7 +38,7 @@ export default function PrincipalDashboard (){
                 }
             )}
             </section>
-            {! localStorage.getItem('userPLStorage') && < ModalToUserHandler/>}
+            { userLogged.email === '' && < ModalToUserHandler/> }
         </section>
     )
 }
