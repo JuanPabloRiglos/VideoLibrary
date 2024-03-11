@@ -21,11 +21,14 @@ function App() {
 	},[data])
 	if (isLoading) return <h2>Cargando ...</h2>;
 	
+
+	// Palet color sky-400 blue-400 indigo-400 violet-500 fuchsia-700 pink-700
+
 	return (
 		<>
 			<BrowserRouter>
+				<main className='container box-content m-auto py-2 '>
 				<Nav />
-				<main className='container box-content m-auto p-2'>
 					<Suspense fallback={<div className=" bg-slate-700 w-2/3 h-2/3 m-auto"> Loading... </div>}>
 					<Routes>
 						<Route  path='/' element={<PrincipalDashboard/>} />

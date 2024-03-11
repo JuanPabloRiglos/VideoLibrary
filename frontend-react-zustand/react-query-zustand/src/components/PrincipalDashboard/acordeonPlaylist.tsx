@@ -1,6 +1,6 @@
 import { ChangeEvent, MouseEvent, useEffect, useState } from "react";
 import {PlaylistStore} from '../../ZustandStore/playlistStore'
-import { Accordion, AccordionBody, AccordionHeader, AccordionList, Button, Card, TextInput } from "@tremor/react";
+import { Accordion, AccordionBody, AccordionHeader, Button, TextInput } from "@tremor/react"; //AccordionList, Card
 import { useNavigate } from "react-router-dom";
 import { useSweetAlert } from "../../hooks/useSweetAlert";
 
@@ -26,11 +26,11 @@ useEffect(()=>{
     }
 
     return( 
-        <Card className="m-auto max-h-96 overflow-scroll" decoration="top" color="indigo">
-  <AccordionList className="w-full " >
+        <section className="mx-auto overflow-scroll bg-rose-50 p-8 border-2 rounded-2xl" style={{maxHeight:'500px'}}>
+  <section className="w-full border-4 rounded-xl bg-rose-900 border-rose-900" >
     {playlists?.map((platylist, i) =>{
         return (
- <Accordion key={i}>
+ <Accordion key={i} >
  <AccordionHeader>{platylist.name}</AccordionHeader>
  <AccordionBody className="flex gap-4">
     <Button color='green' onClick={()=>  navigate(`/search/list/${platylist.name}`)}> See the List </Button>
@@ -42,11 +42,11 @@ useEffect(()=>{
         )
     }) 
 }
-  </AccordionList>
+  </section>
   <TextInput className="mt-2" value={newListName} onChange={(e:ChangeEvent<HTMLInputElement>)=>setNewListName(e.target.value)} placeholder="Write here you new Playlist name" />
 
-  <Button className="w-2/5 my-2" size="xs" onClick={ submitNewListName} >Add Playlist</Button>
+  <button className="w-full mt-4 py-1.5 border-2 rounded-xl font-semibold text-white border-rose-900  bg-teal-400 transition-all hover:border-rose-900 hover:bg-violet-900 hover:text-teal-400"  onClick={ submitNewListName} >Add Playlist</button>
  
-  </Card>
+  </section>
 );
 }

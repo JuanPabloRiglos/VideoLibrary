@@ -1,7 +1,6 @@
 import { useState } from "react";
 import {useForm, SubmitHandler, useWatch } from 'react-hook-form'
 import { Avatar, Box, Modal, TextField } from "@mui/material";
-import {Button} from '@tremor/react';
 import { UserStore } from "../../ZustandStore/userStore";
 import { addUser } from "../../services";
 
@@ -48,8 +47,8 @@ const localHandleSubmit : SubmitHandler<Inputs> =(newUser) =>{
 }
     return (
       <>
-        <Button className="border-2 border-cyan-600 bg-violet-900
-         hover:border-violet-900 hover:bg-cyan-600" onClick={()=>toggleOpen(true)}>Go to Register Form</Button>  
+        <button className="m-auto mt-2 text-center w-11/12 py-1 border-2 rounded-md font-semibold text-white border-cyan-600 bg-violet-900
+         hover:border-violet-900 hover:bg-cyan-600 shadow-xl transition-colors " onClick={()=>toggleOpen(true)}>Go to Register Form</button>  
          {/* se renderiza en loggInForm */}
         <Modal
           open={open}
@@ -91,8 +90,8 @@ const localHandleSubmit : SubmitHandler<Inputs> =(newUser) =>{
             <TextField type="text" label="Charge your perfil image" variant="standard" {...register("img")} /> 
             {/* el tipe debe ser file */}
             </div>
-            <Button type="submit" className=" w-1/2 m-auto border-2 border-cyan-600 bg-violet-900
-         hover:border-violet-900 hover:bg-cyan-600"> Registrate</Button>
+            <button type="submit" className=" m-auto mt-2 text-center w-6/12 py-1 border-2 rounded-md font-semibold text-white border-cyan-600 bg-violet-900
+         hover:border-violet-900 hover:bg-cyan-600 shadow-xl transition-colors"> Registrate</button>
             </form>
           </Box>
         </Modal>

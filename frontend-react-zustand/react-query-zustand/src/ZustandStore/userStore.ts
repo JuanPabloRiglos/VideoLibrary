@@ -7,7 +7,8 @@ interface userStoreState{
     userLogged : user
     setNewUser: (email:string, password:string)=> void, 
     removeNewUser: ()=> void,
-    addUserLogged: (usuario : user)=> void
+    addUserLogged: (usuario : user)=> void, 
+    removeUserLogged: () => void
 }
 
 export const UserStore = create(persist<userStoreState>((set, get)=>({
@@ -34,6 +35,12 @@ export const UserStore = create(persist<userStoreState>((set, get)=>({
         removeNewUser()
         set(()=>({
             userLogged: usuario
+        }))
+     }, 
+     removeUserLogged:()=>{
+        set(()=>({
+            userLogged :{name: "",email: "", password: ""
+            }
         }))
      }
 }), {name:'userVideoAppStorage'}))

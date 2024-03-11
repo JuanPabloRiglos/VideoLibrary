@@ -12,7 +12,7 @@ export default function PrincipalSection(){
     if(isError) return (<div>{`Ups an Error : ${error.message}`}</div>) 
 
     return( 
-    <section className='w-full flex flex-wrap lg:grid grid-cols-3 gap-2 rounded-sm shadow'>
+    <section className='mt-auto w-full flex flex-wrap lg:grid grid-cols-3 gap-2 rounded-sm shadow'>
     {data?.map((item : Video) => (
     <CardToRender key={item._id} item={item}
     

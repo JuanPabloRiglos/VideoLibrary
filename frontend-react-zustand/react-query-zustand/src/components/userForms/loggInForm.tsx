@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import {useForm, SubmitHandler } from 'react-hook-form';
 import { Modal, CardContent, Typography, CardActions, Button, TextField} from '@mui/material/';
 import Fingerprint from '@mui/icons-material/Fingerprint';
-import { Card } from '@tremor/react';
+
 import { RegisterForm } from '../userForms/registerForm';
 import { UserStore } from '../../ZustandStore/userStore';
 // import { userLogginState } from '../../hooks/types.users';
@@ -60,13 +60,13 @@ Know us!
         </Typography>
       <CardActions>
       {/* border-cyan-600 bg-violet-900 */}
-        <div className='mx-auto border-2 rounded-md border-cyan-600 sm:border-violet-900 font-semibold   text-cyan-600 sm:text-slate-100 p-1 w-3/5 sm:2/5 flex flex-nowrap justify-center bg-tremor-background sm:bg-cyan-600' onClick={()=> navigate('/seAll')} >See all</div>
+        <div className='mx-auto border-2 rounded-md border-cyan-600 sm:border-violet-900 font-semibold text-cyan-600 sm:text-slate-100 p-1.5 w-3/5 sm:2/5 flex flex-nowrap justify-center bg-tremor-background hover:bg-cyan-600 hover:text-white sm:bg-cyan-600 sm:hover:bg-violet-900 sm:hover:border-cyan-600  hover:cursor-pointer' onClick={()=> navigate('/seAll')} >See all</div>
       </CardActions>
       </CardContent>
     </article>
           </div>
           <div className='w-full  md:w-1/2 h-full bg-tremor-background rounded-sm animate-fade-left'>
-          <Card className='w-4/5 sm:h-4/5 md:h-4/5 m-auto my-2 md:mt-14 '>
+          <article className='w-4/5 h-4/5 m-auto my-2 border-2 rounded-xl  p-4 flex flex-col justify-start align-middle md:justify-center md:mt-14'>
             <form onSubmit={handleSubmit(logginSubmit)} className='flex flex-col gap-5'>
             <div className="flex flex-col">
             <TextField  type="text" label="Enter your email address"  {...register("email",{ required: {value: true, message:'Debes escribir tu correo electronico'}, pattern:{value: /\S+@\S+\.\S+/, message:'Te email most be valid'} })}
@@ -92,7 +92,7 @@ Know us!
             <h3 className='m-auto font-semibold'> You don't have an account?</h3>
             <RegisterForm /> 
             </div>
-            </Card>
+            </article>
           </div>
         </div>
       </Modal>

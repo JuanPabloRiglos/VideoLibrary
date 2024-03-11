@@ -5,5 +5,6 @@ export const api = axios.create({
 });
 
 export const apiUsers = axios.create({
-    baseURL :'http://localhost:3444/users'
+    baseURL :'http://localhost:3000/users'
 });
+// BORRAR< SOLO PARA SABER COMO FUNCIONABA PARA EL PROyECTO  
