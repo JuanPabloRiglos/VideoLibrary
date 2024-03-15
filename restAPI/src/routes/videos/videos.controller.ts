@@ -28,7 +28,8 @@ export const createVideo : RequestHandler = async(req, res)  => {
     }
     const video = new VideoModel(req.body)
     const saveVideo = await video.save()
-    res.status(200).json(saveVideo)}
+    res.status(200).json(saveVideo)
+return(video)}
 
  
 export const updateVideo : RequestHandler = async(req, res)  => {

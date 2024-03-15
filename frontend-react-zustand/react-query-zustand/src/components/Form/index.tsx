@@ -1,34 +1,41 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { Card, Text, TextInput, Textarea, Button, Select, SelectItem } from "@tremor/react";
 import { useState , ChangeEvent ,FormEvent, useEffect} from "react";
 import { useNavigate , useParams} from "react-router-dom";
 import { toast } from "react-toastify";
 import { Video, VideoToSave } from "../../hooks/types";
 import { useApiHook } from "../../hooks/useApi";
+import { useUserDataHandler } from "../../hooks/useUserDataHandler";
 import { PlaylistStore } from "../../ZustandStore/playlistStore";
+import { UserStore } from "../../ZustandStore/userStore";
 
 export default function Form(){
+  const {userLogged }= UserStore()
+ const {addVideoUserDbStore, editedVideoUserDbStore}= useUserDataHandler()
   const {playlists}= PlaylistStore()
   // const {addVideoToList}= PlaylistStore()
   const navigate = useNavigate()
   const params = useParams()
-  const initialState : VideoToSave = { title: '',
-  description:'', 
-  url:'', 
-topyc:''}
+  const initialState : VideoToSave = {
+    title: '',
+    description: '',
+    url: '',
+    topyc: '',
+    owners: [''],
+  }
     const [video, setVideo] = useState<VideoToSave | Video>(initialState)
   const {editedVideo, useAddVideo, getVideo} = useApiHook()
+
+ 
  
     useEffect(()=>{
-
-      async function fetchVideoToEditData() {
+      async function fetchVideoToEditData()  {
         if(params.id){ 
-          // eslint-disable-next-line @typescript-eslint/no-unused-vars
-          const response : Video = await getVideo(params.id)
+           await getVideo(params.id)
           .then(response => setVideo(response))
         }
       }
        fetchVideoToEditData();
-      
     },[params])
 
     const inputHandler =(e : ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>{
@@ -39,13 +46,16 @@ topyc:''}
       setVideo({ ...video , topyc: value})
     }
 
-    const handlerSubmit = (e : FormEvent<HTMLFormElement>) =>{
+    const handlerSubmit = async (e : FormEvent<HTMLFormElement>) =>{
        e.preventDefault()
        if(!params.id){
-         useAddVideo.mutate(video)
-         toast.success('New Video Added')
+      // DISPARARLO UNA VEZ QUE SE CARGO TODO EN LADB Y ZUSTAND 
+        useAddVideo.mutate({...video,  owners :[userLogged._id ]}) // agrega a la db Videos
+        toast.success('New Video Added')
        } else {
-        editedVideo.mutate(video)
+        editedVideoUserDbStore(video)
+        // Trabajar aca la edicion del video dentro del usuario
+         editedVideo.mutate(video)// esto no podria estar. solo con permisos de admin acaso?
          toast.success('Video edited whit succes!')
        }
         setVideo(initialState)

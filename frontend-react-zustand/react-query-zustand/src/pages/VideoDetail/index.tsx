@@ -2,12 +2,12 @@ import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 // import { CardToRender } from "../Card";
 import { toast } from "react-toastify";
-import { Badge, Button, Card, Metric, Select, SelectItem, Text } from "@tremor/react";
+import { Badge, Card, Metric, Select, SelectItem, Text } from "@tremor/react";
 import ReactPlayer from "react-player";
 
-
-import { Video } from "../../hooks/types";
-import { useApiHook } from "../../hooks/useApi";
+import { Video } from "../../hooks/types.ts";
+import { useApiHook } from "../../hooks/useApi.ts";
+import { useUserDataHandler } from "../../hooks/useUserDataHandler.ts";
 import { useSweetAlert } from "../../hooks/useSweetAlert.ts";
 import { PlaylistStore } from "../../ZustandStore/playlistStore.ts";
 
@@ -18,11 +18,13 @@ topyc:''}
 
 
 export default function VideoDetail(){
-
+	const {canDeleteVideo} = useUserDataHandler()
+  const [canDelete, setCanDelete]= useState <boolean>(false)
   const [playListSelect, setPlayListSelect] = useState<string>('')
     const [videoDetail, setVideoDetail]= useState<Video>(initialState)
     const {getVideo, editedVideo} = useApiHook()
     const params = useParams()
+    console.log('params', params)
     const navigate = useNavigate()
     const {SweetAlertForDelete} = useSweetAlert()
 
@@ -30,26 +32,37 @@ export default function VideoDetail(){
 	const {addVideoToList} = PlaylistStore() 
 	const {playlists} =PlaylistStore()
 
+  async function fetchVideoDetailData() {
+    if(params.id){ 
+     // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const response : Video = await getVideo(params.id) //ignore
+      .then(response => setVideoDetail(response))
+      console.log('esto es el paramsn id', params.id)
+    }
+  }
     useEffect(()=>{
-
-      async function fetchVideoDetailData() {
-        if(params.id){ 
-          // eslint-disable-next-line @typescript-eslint/no-unused-vars
-          const response : Video = await getVideo(params.id) //ignore
-          .then(response => setVideoDetail(response))
-        }
-      }
        fetchVideoDetailData();
-      
     },[params])
+
+    useEffect(()=>{
+      if(videoDetail._id != ''){ 
+        const userCan = canDeleteVideo(videoDetail)
+      
+        setCanDelete(userCan)     
+      }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    },[videoDetail, setCanDelete])
 
     const addToPlayListHandler = (listName:string, item : Video) =>{
       const videoForEdit : Video = { ...item, topyc:listName}
-     editedVideo.mutate(videoForEdit)
+       editedVideo.mutate(videoForEdit)
        toast.success('Video edited whit succes!')
      addVideoToList(listName, item._id)
    }
-
+const deleteVideo=(id)=>{
+  SweetAlertForDelete(id)
+  navigate('/')
+}
     return(
       <>
         <section key={videoDetail._id} className="w-4/5 m-auto md:w-full min-w-80">
@@ -74,13 +87,13 @@ export default function VideoDetail(){
 						}
 						</Select>
 						</div>}
-				<Button size="sm" variant="primary" className=" w-1/3 rounded-lg" onClick={() => navigate(`/update/${videoDetail._id}`)}>
+				<button className={`${canDelete == true ? 'block': 'hidden'}  w-1/3 rounded-lg p-2 bg-teal-600 text-white border-2 border-teal-700 hover:bg-teal-400`}  onClick={() => navigate(`/update/${videoDetail._id}`)}>
 								Edit Video
-							</Button>
+							</button>
 							
-				<Button size="sm" variant="primary" className=" w-1/3 rounded-lg" color="red" onClick={()=> SweetAlertForDelete(videoDetail._id)}>
+				<button className={`${canDelete == true ? 'block': 'hidden'}  w-1/3 rounded-lg p-2 bg-rose-600 text-white border-2 border-rose-800 hover:bg-rose-900`}  color="red" onClick={()=> deleteVideo(videoDetail._id)}>
 					Delete
-				</Button>
+				</button>
         </div>
 				</section>
 			</Card> 

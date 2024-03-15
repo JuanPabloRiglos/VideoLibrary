@@ -1,6 +1,7 @@
-import {  Schema , model } from "mongoose";
+import mongoose, {  Schema , model } from "mongoose";
 
 const videoSchema = new Schema({
+       
     title:{
         type : String,
         require: true,
@@ -18,7 +19,11 @@ const videoSchema = new Schema({
         unique: true
     }, 
     topyc:{type:String,
-        trim:true}
+        trim:true},
+    owners:{
+            type:  [
+                String
+                ]}
 },{
     versionKey:false,
     timestamps:true

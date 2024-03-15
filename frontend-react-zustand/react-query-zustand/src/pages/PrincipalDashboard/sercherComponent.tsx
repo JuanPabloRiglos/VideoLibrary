@@ -33,7 +33,7 @@ export function SercherComponent () {
   [])
 // Palet color-> fuchsia-100 teal-400 teal-500 teal-700 violet-900 
    return (
-  <div className="w-10/12 h-fit mt-2  p-4 mx-auto border-2 bg-fuchsia-50 rounded-xl" >
+  <div className="w-10/12 h-fit mt-2  p-4 mx-auto border-2 bg-fuchsia-50 rounded-xl "  >
     <div className="flex justify-start py-2 rounded-lg">
     <StyledInputBase  placeholder="🔎 Search..." value={searchBy} className=" mx-1 bg-fuchsia-100 w-full  rounded-md border-4 border-rose-900 "  onChange={(e: ChangeEvent<HTMLInputElement>)=>setSearchBy(e.target.value)} onKeyDown={()=>debounceSearchVideos(searchBy)}/>
   </div>  

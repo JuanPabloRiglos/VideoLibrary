@@ -1,7 +1,7 @@
 import {  Schema , model } from "mongoose";
 
 const userSchema = new Schema({
-    name:{
+  firstName:{
         type : String,
         require: true,
         trim:true
@@ -12,13 +12,34 @@ const userSchema = new Schema({
         trim:true, 
         unique:true
     }, 
+    lastName:{
+        type: String,
+        trim:true,
+    },
     img:{
         type : String,
+        trim:true,
     }, 
     password:{
         type: String,
         require:true
-    }
+    }, 
+    playlists: {
+      name: String,
+      content: []
+    }, 
+      videos:  {
+        type: [], 
+    
+      }, 
+      followers:  {
+        type: [String], 
+        default: [] 
+      },
+      followed:  {
+        type: [String], 
+        default: [] 
+      },
 },{
     versionKey:false,
     timestamps:true

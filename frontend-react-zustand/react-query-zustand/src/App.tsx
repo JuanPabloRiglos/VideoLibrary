@@ -4,18 +4,22 @@ import { ToastContainer } from "react-toastify";
 import { useApiHook } from "./hooks/useApi.ts";
 import { PlaylistStore } from "./ZustandStore/playlistStore.ts";
 import { Nav } from "./components/Nav/index.tsx";
+
 // elimino las importaciones explicitas como la de nav (que esta siempre) y las convierto en importaciones a demanda, para optimizar el renderizado. Importante, los componentes TIENEN que exportarse como DEFOULT, sino no se renderizan
-const PrincipalDashboard = lazy(()=> import("./components/PrincipalDashboard"))
-const SearchResult = lazy(()=> import("./components/SearchResult/index.tsx"))
-const PrincipalSection = lazy(()=>import("./components/PrincipalSection/"));
+const PrincipalDashboard = lazy(()=> import("./pages/PrincipalDashboard/index.tsx"));
+const SearchResult = lazy(()=> import("./pages/SearchResult/index.tsx"));
+const PrincipalSection = lazy(()=>import("./pages/PrincipalSection/index.tsx"));
 const Form = lazy(()=>import("./components/Form/index.tsx"));
-const VideoDetail = lazy(()=>import("./components/VideoDetail/index.tsx"));
+const VideoDetail = lazy(()=>import("./pages/VideoDetail/index.tsx"));
+const UserPerfilEdit = lazy(()=> import("./pages/UserPerfilEditForm/index.tsx"))
 
 function App() {
+
 	const {sincronizeListsInStoreWhitDb}= PlaylistStore()
 	const {useFetchVideos}= useApiHook()
 	const {data, isLoading } = useFetchVideos();
 	useEffect(()=>{
+		
 		data && sincronizeListsInStoreWhitDb(data);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	},[data])
@@ -27,7 +31,7 @@ function App() {
 	return (
 		<>
 			<BrowserRouter>
-				<main className='container box-content m-auto py-2 '>
+				<main className='container box-content m-auto py-2 h-screen w-screen overflow-hidden'>
 				<Nav />
 					<Suspense fallback={<div className=" bg-slate-700 w-2/3 h-2/3 m-auto"> Loading... </div>}>
 					<Routes>
@@ -38,6 +42,7 @@ function App() {
 						<Route path='/form' element={<Form />} />
 						<Route path='/update/:id' element={<Form />} />
 						<Route path='/detail/:id' element={<VideoDetail />} />
+						<Route path='/userPerfil' element={<UserPerfilEdit />} />
 					</Routes>
           <ToastContainer/>
 		</Suspense>

@@ -5,6 +5,7 @@ import userRoutes from './routes/users/users.rutes'
 import morgan from "morgan";
 const app = express();
 
+
 //setings
 app.set('port', process.env.PORT || 3444)
 app.use(morgan('dev'))

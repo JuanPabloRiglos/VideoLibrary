@@ -1,5 +1,5 @@
 import { UseQueryResult, useQuery } from '@tanstack/react-query'
-import { fetchVideos, updatedVideo, addVideo, getOneVideo, deleteVideo} from '../services'
+import { fetchVideos, updatedVideo,  getOneVideo, deleteVideo, addVideo} from '../services'//addVideo,
 import { useMutation , useQueryClient} from  '@tanstack/react-query';
 import { Video } from './types';
 export function useApiHook(){
@@ -18,7 +18,7 @@ const useAddVideo = useMutation({mutationFn: addVideo,
     return useQuery( {queryKey:['videos'], queryFn:fetchVideos})
 }
 
-const getVideo = async (id:string)=>{
+const getVideo = async (id:string) : Promise<Video>=>{
     const res : Video  = await getOneVideo(id)
     const {title, url, description, _id, topyc} = res
     const videoToShow = {title, url, description, _id, topyc }
@@ -29,7 +29,7 @@ const getVideo = async (id:string)=>{
     queryClient.invalidateQueries({queryKey:['videos']})
 }})
 
-return{ editedVideo, useFetchVideos, useAddVideo, getVideo, deleteVideoMutation}
+return{ editedVideo, useFetchVideos, getVideo,useAddVideo, deleteVideoMutation} // 
 }
 
 // export function useAddVideo (){ return useMutation({mutationFn: addVideo})} -> lo tuve que aplicar directamente en el form

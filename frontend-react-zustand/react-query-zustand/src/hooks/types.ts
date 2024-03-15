@@ -1,9 +1,10 @@
 export interface Video {
-    _id:string
+    _id?:string
     title: string,
     description:string, 
     url:string,
-    topyc:string
+    topyc?:string, 
+    owners?:string[]
 }
 
 export interface VideoToSave {
@@ -11,7 +12,8 @@ export interface VideoToSave {
     title: string,
     description:string, 
     url:string,
-    topyc?:string
+    topyc?:string, 
+    owners?:[string]
 }
 
 export interface Playlist{ 

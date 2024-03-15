@@ -2,8 +2,8 @@ import { useState } from "react";
 import {useForm, SubmitHandler, useWatch } from 'react-hook-form'
 import { Avatar, Box, Modal, TextField } from "@mui/material";
 import { UserStore } from "../../ZustandStore/userStore";
-import { addUser } from "../../services";
-
+// import { addUser } from "../../services";
+import { useApiUsersHook } from "../../hooks/useApiUsers";
 
 const style = {
     position: 'absolute',
@@ -19,14 +19,15 @@ const style = {
   };// no boorrar, son estilos
 
   type Inputs = {
-    name: string,
+    firstName: string,
     email: string,
     password: string,
-    repeatPassword:string,
-    img:string
+    img:string, 
+    repeatPassword?:string
   }// tipado para react-hook-form
   
    export function RegisterForm() {
+    const {useaddUser} = useApiUsersHook()
     const {setNewUser} = UserStore()
     const [open, setOpen] = useState(false);
     const toggleOpen = (trueOrFalse:boolean) => setOpen(trueOrFalse);// maneja el open o close del modal
@@ -41,9 +42,9 @@ const principalPassword = useWatch({
 const localHandleSubmit : SubmitHandler<Inputs> =(newUser) =>{ 
   console.log(newUser)
 //logica para que pegue a la api
-  addUser(newUser)//agrega a db
+  useaddUser.mutate(newUser)//agrega a db
   setNewUser(newUser.email, newUser.password)// setea en store ultimo agregado
- toggleOpen(false)//cierra modal
+  toggleOpen(false)//cierra modal
 }
     return (
       <>
@@ -63,8 +64,8 @@ const localHandleSubmit : SubmitHandler<Inputs> =(newUser) =>{
 
                 <div className=" w-full flex flex-col gap-3 md:flex-row justify-around">
                 <article className="flex flex-col">  
-            <TextField  type="text" label="Introduce your name" variant="standard" autoFocus {...register("name", {required:{value: true, message: "The fiedl can't be empty"}, minLength:{value:3, message:'You most write 3 leters at least'} })} /> 
-            {errors.name && <span className="flex text-center text-xs font-semibold text-red-700">{errors.name.message}</span>}
+            <TextField  type="text" label="Introduce your First name" variant="standard" autoFocus {...register("firstName", {required:{value: true, message: "The fiedl can't be empty"}, minLength:{value:3, message:'You most write 3 leters at least'} })} /> 
+            {errors.firstName && <span className="flex text-center text-xs font-semibold text-red-700">{errors.firstName.message}</span>}
              </article>
              <article className="flex flex-col">
              <TextField type="email" label="write your email" variant="standard" {...register("email",{ required: {value: true, message:'Debes escribir tu correo electronico'}, pattern:{value: /\S+@\S+\.\S+/, message:'Te email most be valid'} })} />

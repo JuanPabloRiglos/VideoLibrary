@@ -1,12 +1,13 @@
-import { useState } from "react";
-import { Link } from "react-router-dom"
+import { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom"
 import { Avatar, Button , Menu, MenuItem, Fade} from "@mui/material";
 import Fingerprint from "@mui/icons-material/Fingerprint";
 import { UserStore } from "../../ZustandStore/userStore"
 import { ModalToUserHandler } from "../userForms/loggInForm";
-
+import loggoutIcon from "../../assets/SVGs/logoutforRigth.svg"
 
 export function Nav(){
+  const navigate = useNavigate()
   const [logginModal, setLogginModal] = useState<boolean>(false) 
   const {userLogged} = UserStore();
   const {removeUserLogged} = UserStore();
@@ -16,7 +17,11 @@ const open = Boolean(anchorEl);
 const handleClick = (event: React.MouseEvent<HTMLElement>) => { setAnchorEl(event.currentTarget);};
 const handleClose = () => {setAnchorEl(null);};
 // Palet color-> fuchsia-100 teal-400 teal-500 teal-700 violet-900 
-
+ const loggOutSet =()=>{
+  removeUserLogged();
+  setLogginModal(false)
+ }
+ useEffect(()=>{  },[userLogged])
     return(
       <> 
         <nav className=" w-full sm:h-20 mx-auto p-1 pr-3 flex justify-between text-sm font-medium bg-tremor-background  border-b-2 border-pink-700">
@@ -58,6 +63,9 @@ const handleClose = () => {setAnchorEl(null);};
         <MenuItem onClick={handleClose}>
         <Link to='/seAll' className=" hover:text-teal-700 hover:font-semibold " > Se all</Link>
         </MenuItem>
+        <MenuItem onClick={handleClose}>
+        <button  className=" hover:text-teal-700 hover:font-semibold "  onClick={loggOutSet}> Loggout</button>
+        </MenuItem>
       </Menu>
     </div>
     {/* // Palet color-> fuchsia-100 teal-400 teal-500 teal-700 violet-900  */}
@@ -74,23 +82,21 @@ const handleClose = () => {setAnchorEl(null);};
         </ul>
         {/* // Palet color->  fuchsia-100 teal-400 teal-500 teal-700 violet-900 */}
           {userLogged.email != '' ?
-            <div className="max-w-3/5 flex gap-1 p-1 mr-1 flex-col h-3/5 border-1 border-tremor-background rounded-md " onClick={()=> setLogginModal(!logginModal)}>
+          //reenderiza si hay alguien logeado
+            <div className="xs:4/5 md:2/5 xl:w-1/5 rounded-md flex justify-between gap-2 items-center ">
               
-             <div className="flex gap-1 h-10 border-2 rounded-2xl border-slate-950 overflow-hidden bg-indigo-400">
-            <span className="m-auto pl-2 font-semibold text-lg text-slate-100">{userLogged.name}</span>
-           {userLogged.img ?<img src={userLogged.img} alt={userLogged.name} className="mt-2 ml-2 h-full w-1/5 rounded-full"/>  : 
-           <Avatar sx={{marginTop:'-1.5%', marginRight:'-1.5%'}} src="/broken-image.jpg" />}
+             <div className={`flex pl-1 h-14 border-2 rounded-2xl border-teal-400  bg-violet-900  ${logginModal == true ? 'hidden': 'block'} hover:cursor-pointer` } onClick={()=> navigate('/userPerfil')} >
+            <span className="m-auto pl-2 font-semibold text-lg text-slate-100">{userLogged.firstName} {userLogged.lastName}</span>
+           {userLogged.img ?<Avatar src={userLogged.img} alt={userLogged.firstName} className="mt-2 ml-2 h-full w-1/5 rounded-full"  sx={{marginTop:'-3%', marginRight:'-5%',  width: 62, height: 62}}/>  : 
+           <Avatar sx={{marginTop:'-3%', marginRight:'-5%',  width: 62, height: 62}} src="/broken-image.jpg" />}
              </div>
-           
-            {( logginModal && userLogged.name ) ? 
-             <Button style={{display:'flex', backgroundColor:'white', height:'40%', margin:'2%', marginTop:'3.5%', border:'1px solid violet'}} aria-label="fingerprint" color="secondary" onClick={removeUserLogged}>
-              LoggOut
-             </Button>:
-             <span className=" font-semibold text-xs text-slate-950 ">{userLogged.email}</span>
-            }
+            <div className="hidden sm:block">
+              <img src={loggoutIcon}  className="h-8 w-8 hover:cursor-pointer hover:h-10 hover:w-10" onClick={loggOutSet}/>
+            </div>
            </div>
-           
+
             : 
+            //boton de abajo se reenderiza si no hay nadie logeado
           <Button style={{display:'flex', gap:'8px', backgroundColor:'white', height:'50%', margin:'2%', marginTop:'3.5%'}} aria-label="fingerprint" color="secondary" onClick={()=>setLogginModal(true)}>
           LoggIn
           <Fingerprint />

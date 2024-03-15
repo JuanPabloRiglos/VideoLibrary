@@ -7,8 +7,8 @@ import Fingerprint from '@mui/icons-material/Fingerprint';
 import { RegisterForm } from '../userForms/registerForm';
 import { UserStore } from '../../ZustandStore/userStore';
 // import { userLogginState } from '../../hooks/types.users';
-import { getOneUser } from '../../services';
-
+// import { getOneUser } from '../../services';
+import { useApiUsersHook } from '../../hooks/useApiUsers';
 type LoginInputs = {
   email: string,
   password: string,
@@ -17,24 +17,25 @@ type LoginInputs = {
 
 export function ModalToUserHandler() {
   const [apiError, setApiError ] = useState<string>('')
-  const {userLogged} = UserStore()
+  const {userLogged, newUser} = UserStore()
   const navigate = useNavigate()
   // const {newUser} = UserStore()
+  const {getUser} = useApiUsersHook()
   const {addUserLogged} = UserStore()
   const [open, setOpen] = useState(userLogged.email !=''? false :true);
 useEffect(()=>{
   
-},[apiError])
-const {register, handleSubmit, formState:{errors}} = useForm<LoginInputs>()
+  },[apiError])
+const {register, handleSubmit, formState:{errors}} = useForm<LoginInputs>({defaultValues:{email:newUser.email}})
 
-  const logginSubmit : SubmitHandler <LoginInputs>= async (loggData)=>{ 
+  const logginSubmit : SubmitHandler <LoginInputs> = async (loggData)=>{ 
    
     !errors
-     await getOneUser(loggData).then(data=> {
-
-        data.email == undefined ||  data.email == null ? setApiError('La direccion de Correo no se ha encontrado en la Base de Datos. Pruebe sin mayusculas'):
-       ( data.password != loggData.password ? setApiError('La contaseña no coincide con la guardada en la base de datos'):
-        addUserLogged(data))     
+    await getUser(loggData).then(data=> {
+      data?.email == undefined ||  data?.email == null ? setApiError('La direccion de Correo no se ha encontrado en la Base de Datos. Pruebe sin mayusculas'):
+      ( data.password != loggData.password ? setApiError('La contaseña no coincide con la guardada en la base de datos'):
+      addUserLogged(data))    
+      setOpen(false) 
     } )
 }
 

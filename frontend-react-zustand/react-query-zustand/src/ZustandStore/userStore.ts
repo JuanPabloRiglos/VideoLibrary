@@ -2,6 +2,7 @@ import { create} from "zustand";
 import { userLogginState, user } from "../hooks/types.users";
 import { persist } from "zustand/middleware";
 
+
 interface userStoreState{
     newUser: userLogginState,
     userLogged : user
@@ -14,9 +15,19 @@ interface userStoreState{
 export const UserStore = create(persist<userStoreState>((set, get)=>({
     newUser: { email: "", password: ""},
     userLogged:{
-        name: "",
+        firstName: "",
+        lastName:"",
         email: "",
-        password: ""
+        password: "",
+        playlists: [],
+        videos:[{  _id: "",
+        title: "",
+        description: "",
+        url: "",
+        topyc: "",
+        owners: [""]}],
+        followed:[],
+        followers:[],
     },
     setNewUser:(email, password)=>{
         let {newUser} = get()
@@ -36,11 +47,22 @@ export const UserStore = create(persist<userStoreState>((set, get)=>({
         set(()=>({
             userLogged: usuario
         }))
-     }, 
+     },
      removeUserLogged:()=>{
         set(()=>({
-            userLogged :{name: "",email: "", password: ""
-            }
+            userLogged : {firstName: "",
+        lastName:"",
+        email: "",
+        password: "",
+        playlists: [],
+        videos:[{ _id: "",
+        title: "",
+        description: "",
+        url: "",
+        topyc: "",
+        owners: [""]}],
+        followed:[],
+        followers:[]}
         }))
-     }
+     },
 }), {name:'userVideoAppStorage'}))

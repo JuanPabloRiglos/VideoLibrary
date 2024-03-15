@@ -1,10 +1,13 @@
 import Swal from "sweetalert2";
 import { useApiHook } from "./useApi";
 import { PlaylistStore } from "../ZustandStore/playlistStore";
+
+
 export function useSweetAlert(){
+
     const {removePlaylist} = PlaylistStore()
 const {deleteVideoMutation} = useApiHook()
-    const  SweetAlertForDelete =  (id : string)=>{
+    const  SweetAlertForDelete =  (id:string)=>{
         Swal.fire({
             title: "Are you sure?",
             text: "You won't be able to revert this!",
@@ -20,7 +23,8 @@ const {deleteVideoMutation} = useApiHook()
                 text: "Your file has been deleted.",
                 icon: "success"
             });
-            deleteVideoMutation.mutate(id)
+
+         deleteVideoMutation.mutate(id) //esto solo con permisos del Admin Despues
             }
         });
      }
@@ -48,3 +52,4 @@ const {deleteVideoMutation} = useApiHook()
 
     return{SweetAlertForDelete, SweetAlertDeletePL}
 }
+
