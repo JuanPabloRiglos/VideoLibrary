@@ -8,6 +8,7 @@ import ReactPlayer from "react-player";
 import { Video } from "../../hooks/types.ts";
 
 import { PlaylistStore } from "../../ZustandStore/playlistStore.ts";
+import { UserStore } from "../../ZustandStore/userStore.ts";
 import { useApiHook } from "../../hooks/useApi.ts";
 import { useUserDataHandler } from "../../hooks/useUserDataHandler.ts";
 import { useSweetAlert } from "../../hooks/useSweetAlert.ts";
@@ -17,6 +18,7 @@ type PorpsCard = {
 };
 
 export function CardToRender({ item }: PorpsCard) {
+	const {userLogged}= UserStore()
 	const {canDeleteVideo} = useUserDataHandler()
 	const [canDelete, setCanDelete]= useState <boolean>(false)
 	const [playListSelect, setPlayListSelect] = useState<string>('')
@@ -33,13 +35,12 @@ export function CardToRender({ item }: PorpsCard) {
 //trabajo de zustand
 	// const {addVideoToList} = PlaylistStore() 
 	const {playlists} =PlaylistStore()
+	console.log('acaaa', userLogged)
 
-// Setea si el usuario puede borrar o editar videos. Si son de el o no.
 
 useEffect(()=>{
 	const userCan = canDeleteVideo(item)
 	setCanDelete(userCan)
-	
 // eslint-disable-next-line react-hooks/exhaustive-deps
 },[])
 
@@ -60,17 +61,21 @@ const addToPlayListHandler = (listName:string, item : Video) =>{
 				<ReactPlayer style={{maxWidth:'100%', borderRadius:'50px',width: `${isDetail && '300px'}`, height: `${isDetail && '200px'}`  }} url={item.url}/>	
 				</div>
 				<div className="flex flex-wrap gap-1 justify-between overflow-hidden"> 
-				{item.topyc ?  <Badge className="truncate text-clip">{`In ${item.topyc} playlist`}</Badge> :
-						<div className=" w-3/5 space-y-6">
+				{ userLogged ?
+				(item.topyc ?  <Badge className="truncate text-clip">{`In ${item.topyc} playlist`}</Badge> :
+						<div className=" w-3/5 space-y-6">{ userLogged ?
 							<Select className="w-full" value={playListSelect} onValueChange={setPlayListSelect}>
-							{ playlists.map(list=>
-								<SelectItem value={list.name} onClick={()=> addToPlayListHandler(list.name, item)}>
+							{ playlists.map((list, i)=>{ return(
+								<SelectItem key={i} value={list.name} onClick={()=> addToPlayListHandler(list.name, item)}>
 									{list.name}
-								</SelectItem>
+								</SelectItem>)}
 							)
 						}
-						</Select>
-						</div>}
+						
+						</Select> :
+						<span> No tienes Playlist aun</span>}
+						</div>): 
+						<span className="bg-teal-400 text-rose-50 border-2 border-violet-900 px-2 py-3 rounded-xl">Login for more acctions </span>}
 					{isDetail && <Button className={`${canDelete ? 'block': 'hidden'}`} size="sm" variant="primary" onClick={() => navigate(`/update/${item._id}`)}>
 								Edit Video
 							</Button>}

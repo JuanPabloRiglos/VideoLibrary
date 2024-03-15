@@ -15,6 +15,7 @@ export function useUserDataHandler(){
 		addUserLogged(fintalData)
     }
 
+    // =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= Trabajo sobre videos en el usuario =-=-=-=-=-=-=-=-
     const addVideoUserDbStore = async (allVideos:Video[])=>{ // tambien termina siendo una edicion 
         console.log('todos los videos de la app :', allVideos)
         console.log('saque el utimo video que me llego, es :',allVideos)
@@ -61,11 +62,23 @@ export function useUserDataHandler(){
         console.log('que ha en los videos:,', userVideos)
         let fileredVideos;
         userVideos[0]._id ?fileredVideos = userVideos.filter(video => video._id != id) :fileredVideos = userVideos.filter(video => video.url != id)
-
         const updatedUser = {...userLogged, videos : [...fileredVideos]}
         addUserLogged(updatedUser)
         editeUser.mutate(updatedUser)
     }
 
-    return {editUserStoreYDb, addVideoUserDbStore, editedVideoUserDbStore, canDeleteVideo, userDbDeleteVideo}
+//=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=Trabajo en las Playlist en el Usuario
+
+const addPlToUserDb= (newList: string)=>{
+    console.log('llega al addPlTouser esto', newList)
+    const oldsPl = userLogged.playlists
+    let updatedPl;
+    !oldsPl ? updatedPl= [ {name:newList, content:[]}] : updatedPl= [...oldsPl, {name:newList, content:[]}]
+    const updatedUser : user = {...userLogged, playlists: [...updatedPl]}
+    addUserLogged(updatedUser)
+    editeUser.mutate(updatedUser)
+    
+}
+
+    return {editUserStoreYDb, addVideoUserDbStore, editedVideoUserDbStore, canDeleteVideo, userDbDeleteVideo, addPlToUserDb}
 }

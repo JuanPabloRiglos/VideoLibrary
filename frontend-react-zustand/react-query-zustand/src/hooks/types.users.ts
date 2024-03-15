@@ -13,18 +13,13 @@ export interface user{
     createdAt?:string,
     updatedAt?:string,
     _id:string,
-    playlists?: {
-        name: string;
-        content: PlaylistContent[];
-      }[],
+    playlists: []| [{name:string, content: [string] | []}],
     videos?:Video[],
     followers?:string[],
     followed?:string[],
 
 }
 
-interface PlaylistContent {
-    id: string;
-  }
+
 
 export interface erroLogginState  {email:string, password:string, api:string}

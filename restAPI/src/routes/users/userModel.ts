@@ -24,10 +24,7 @@ const userSchema = new Schema({
         type: String,
         require:true
     }, 
-    playlists: {
-      name: String,
-      content: []
-    }, 
+    playlists: [], 
       videos:  {
         type: [], 
     

@@ -15,6 +15,7 @@ interface userStoreState{
 export const UserStore = create(persist<userStoreState>((set, get)=>({
     newUser: { email: "", password: ""},
     userLogged:{
+        _id:'',
         firstName: "",
         lastName:"",
         email: "",
@@ -50,7 +51,9 @@ export const UserStore = create(persist<userStoreState>((set, get)=>({
      },
      removeUserLogged:()=>{
         set(()=>({
-            userLogged : {firstName: "",
+        userLogged : {
+            _id:'',
+        firstName: "",
         lastName:"",
         email: "",
         password: "",

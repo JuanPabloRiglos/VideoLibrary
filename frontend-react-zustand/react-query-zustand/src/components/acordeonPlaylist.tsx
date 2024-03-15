@@ -1,16 +1,17 @@
 import { ChangeEvent, MouseEvent, useEffect, useState } from "react";
 import {PlaylistStore} from '../ZustandStore/playlistStore'
 import { UserStore } from "../ZustandStore/userStore";
-import { Accordion, AccordionBody, AccordionHeader, Button } from "@tremor/react"; //AccordionList, Card
+import { Accordion, AccordionBody, AccordionHeader, Button } from "@tremor/react";
 import { useNavigate } from "react-router-dom";
 import { useSweetAlert } from "../hooks/useSweetAlert";
-
+import { useUserDataHandler } from "../hooks/useUserDataHandler";
 
 
 export function AccordionPlayList() { 
+  const {addPlToUserDb}= useUserDataHandler()
   const {userLogged} = UserStore()
   const {addPlaylist, playlists, sincreonizeListContent} = PlaylistStore()
-  const [playlistToRender, setPlayListToRender]= useState (userLogged.email != '' ? userLogged.playlists.content : playlists)
+  const [playlistToRender, setPlayListToRender]= useState (userLogged.email != '' ? userLogged.playlists : playlists)
   const [newListName, setNewListName] = useState<string>('')
   const navigate = useNavigate()
   const {SweetAlertDeletePL}= useSweetAlert()
@@ -23,10 +24,11 @@ useEffect(()=>{
 
     const submitNewListName = (e:MouseEvent<HTMLButtonElement> ) =>{
       e.preventDefault()
-      addPlaylist(newListName)
+      addPlToUserDb(newListName)
+      // addPlaylist(newListName)
       setNewListName('')
     }
-
+console.log(playlists)
     return( 
         <section className="mx-auto overflow-scroll bg-rose-50 p-6 border-2 hover:shadow-2xl rounded-2xl" style={{maxHeight:'500px'}}>
   <section className="w-full max-h-64 overflow-scroll rounded-xl border-2 " >
@@ -47,7 +49,7 @@ useEffect(()=>{
   </section>
   <input className="mt-2 w-full p-2 border-2 border-violet-900 rounded-xl bg-rose-100" value={newListName} onChange={(e:ChangeEvent<HTMLInputElement>)=>setNewListName(e.target.value)} placeholder="Write here you new Playlist name" />
 
-  <button className="w-full mt-4 py-1.5 border-2 rounded-xl font-semibold text-white border-violet-900  bg-teal-700 transition-all hover:border-rose-900 hover:bg-violet-900 hover:text-teal-400"  onClick={ submitNewListName} >Add Playlist</button>
+  <button className="w-full mt-4 py-1.5 border-2 rounded-xl font-semibold text-white border-violet-900  bg-teal-700 transition-all hover:border-rose-900 hover:bg-violet-900 hover:text-teal-400"  onClick={ submitNewListName} disabled={!userLogged.email} > {userLogged.email ? 'Add Playlist': 'Login for add a Playlist'}</button>
  
   </section>
 );

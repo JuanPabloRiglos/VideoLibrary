@@ -42,14 +42,14 @@ export const PlaylistStore = create(persist<PlaylistState>((set, get)=>({
          //add new lists
    addPlaylist : ( newList:string )=>{
     console.log('aca agregaria la plailist', newList)
-    // const newPlaylist : Playlist = {'name' : newList, 'content': []}
-    // const {playlists} = get()
-    // let copyPL = [...playlists]
-    // const indexInPl = copyPL.findIndex(item => item.name == newList)
-    // if(indexInPl == -1) copyPL = [...copyPL,newPlaylist]
-    // set(() =>({
-    //     playlists : [...copyPL]
-    // })) 
+    const newPlaylist : Playlist = {'name' : newList, 'content': []}
+    const {playlists} = get()
+    let copyPL = [...playlists]
+    const indexInPl = copyPL.findIndex(item => item.name == newList)
+    if(indexInPl == -1) copyPL = [...copyPL,newPlaylist]
+    set(() =>({
+        playlists : [...copyPL]
+    })) 
 },
          //add new Content to List
     addVideoToList: (list, newId)=>{
