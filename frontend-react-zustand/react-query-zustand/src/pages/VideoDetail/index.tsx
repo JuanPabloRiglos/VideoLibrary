@@ -10,6 +10,7 @@ import { useApiHook } from "../../hooks/useApi.ts";
 import { useUserDataHandler } from "../../hooks/useUserDataHandler.ts";
 import { useSweetAlert } from "../../hooks/useSweetAlert.ts";
 import { PlaylistStore } from "../../ZustandStore/playlistStore.ts";
+import { UserStore } from "../../ZustandStore/userStore.ts";
 
 const initialState : Video = {_id:'', title: '',
 description:'', 
@@ -18,7 +19,8 @@ topyc:''}
 
 
 export default function VideoDetail(){
-	const {canDeleteVideo} = useUserDataHandler()
+  const{userLogged} = UserStore()
+	const {canDeleteVideo, addVideoToUsrPl} = useUserDataHandler()
   const [canDelete, setCanDelete]= useState <boolean>(false)
   const [playListSelect, setPlayListSelect] = useState<string>('')
     const [videoDetail, setVideoDetail]= useState<Video>(initialState)
@@ -30,24 +32,23 @@ export default function VideoDetail(){
 
     //trabajo de zustand
 	const {addVideoToList} = PlaylistStore() 
-	const {playlists} =PlaylistStore()
+
 
   async function fetchVideoDetailData() {
     if(params.id){ 
      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const response : Video = await getVideo(params.id) //ignore
+      const response : Promise<Video> = await getVideo(params.id) //ignore
       .then(response => setVideoDetail(response))
-      console.log('esto es el paramsn id', params.id)
+
     }
   }
     useEffect(()=>{
        fetchVideoDetailData();
-    },[params])
+    },[params, userLogged])
 
     useEffect(()=>{
       if(videoDetail._id != ''){ 
         const userCan = canDeleteVideo(videoDetail)
-      
         setCanDelete(userCan)     
       }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -55,6 +56,7 @@ export default function VideoDetail(){
 
     const addToPlayListHandler = (listName:string, item : Video) =>{
       const videoForEdit : Video = { ...item, topyc:listName}
+      addVideoToUsrPl(listName, item._id)
        editedVideo.mutate(videoForEdit)
        toast.success('Video edited whit succes!')
      addVideoToList(listName, item._id)
@@ -76,16 +78,17 @@ const deleteVideo=(id)=>{
 				<Text className="h-3/6 align-top mb-3">{videoDetail.description}</Text>
         <div className=" h-fit flex flex-wrap lg:h-2/6 align-top gap-3  justify-around"> 
 				{videoDetail.topyc ?  <Badge className="w-fit rounded-lg">{`In ${videoDetail.topyc} playlist`}</Badge> :
-						<div className="w-1/2 space-y-6">
+						<div className="w-1/2 space-y-6">{userLogged.email != ''?
 							<Select className="w-full" value={playListSelect} onValueChange={setPlayListSelect}>
                 
-							{ playlists.map(list=>
+							{ userLogged.playlists.map(list=>
 								<SelectItem value={list.name} onClick={()=> addToPlayListHandler(list.name, videoDetail)}>
 									{list.name}
 								</SelectItem>
 							)
 						}
-						</Select>
+						</Select>:
+            <span className="p-2 border-2 border-violet-900 bg-rose-700 text-white rounded-xl">Login for more Actions</span>}
 						</div>}
 				<button className={`${canDelete == true ? 'block': 'hidden'}  w-1/3 rounded-lg p-2 bg-teal-600 text-white border-2 border-teal-700 hover:bg-teal-400`}  onClick={() => navigate(`/update/${videoDetail._id}`)}>
 								Edit Video

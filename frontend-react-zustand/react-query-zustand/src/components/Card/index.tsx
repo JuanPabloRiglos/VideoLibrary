@@ -21,7 +21,7 @@ export function CardToRender({ item }: PorpsCard) {
 	const {userLogged}= UserStore()
 	const {canDeleteVideo} = useUserDataHandler()
 	const [canDelete, setCanDelete]= useState <boolean>(false)
-	const [playListSelect, setPlayListSelect] = useState<string>('')
+	const [playListSelect, setPlayListSelect] = useState<string>("Add to one of your's playlist ")
 	const { editedVideo } = useApiHook()
 	const {SweetAlertForDelete} = useSweetAlert()
 	let isDetail = ''
@@ -35,24 +35,24 @@ export function CardToRender({ item }: PorpsCard) {
 //trabajo de zustand
 	// const {addVideoToList} = PlaylistStore() 
 	const {playlists} =PlaylistStore()
-	console.log('acaaa', userLogged)
+	
 
 
 useEffect(()=>{
 	const userCan = canDeleteVideo(item)
 	setCanDelete(userCan)
 // eslint-disable-next-line react-hooks/exhaustive-deps
-},[])
+},[userLogged])
 
 const addToPlayListHandler = (listName:string, item : Video) =>{
 	 const videoForEdit : Video = { ...item, topyc:listName}
 	editedVideo.mutate(videoForEdit)
     toast.success('Video edited whit succes!')
-	// addVideoToList(listName, item._id)
+	 addVideoToList(listName, item._id)
 }
 
 	return (
-		<div key={item._id} className="w-4/5 m-auto md:w-10/12 h-full min-w-80 ">
+		<div key={item._id} className="w-4/5 m-auto md:w-10/12 min-w-80 ">
 			<article className='m-auto p-4 rounded-2xl w-4/5 hover:w-5/5 h-full flex flex-col justify-around gap-4 cursor-pointer bg-slate-900 hover:border-4 hover:border-teal-400 hover:bg-violet-900 border-rose-900 border-4 shadow-xl' >
 				<Metric style={{color:'white'}} onClick={()=> navigate(`/detail/${item._id}`)}>{item.title}</Metric>
 				<p className="text-slate-200 text-sm">{item.description}</p>
@@ -60,22 +60,24 @@ const addToPlayListHandler = (listName:string, item : Video) =>{
 
 				<ReactPlayer style={{maxWidth:'100%', borderRadius:'50px',width: `${isDetail && '300px'}`, height: `${isDetail && '200px'}`  }} url={item.url}/>	
 				</div>
-				<div className="flex flex-wrap gap-1 justify-between overflow-hidden"> 
-				{ userLogged ?
-				(item.topyc ?  <Badge className="truncate text-clip">{`In ${item.topyc} playlist`}</Badge> :
-						<div className=" w-3/5 space-y-6">{ userLogged ?
-							<Select className="w-full" value={playListSelect} onValueChange={setPlayListSelect}>
-							{ playlists.map((list, i)=>{ return(
-								<SelectItem key={i} value={list.name} onClick={()=> addToPlayListHandler(list.name, item)}>
+				<div className="flex flex-wrap gap-1 justify-between overflow-hidden">
+				{item.topyc ?  <Badge className="truncate text-clip">{`In ${item.topyc} playlist`}</Badge> :
+						<div className=" w-3/5 space-y-6 max-h-32 overflow-scroll">
+							<select className="w-full h-fit overflow-visible  p-2 px-3 border-2 border-violet-900 text-rose-50 bg-teal-700 hover:border-rose-900 hover:text-rose-900 rounded-xl" value={playListSelect}  onChange={(event) => setPlayListSelect(event.target.value)}>
+							<option  value={playListSelect}>
+									{playListSelect}
+								</option>
+							{ userLogged.playlists.map((list, i)=>(
+								<option key={i} value={list.name} onClick={()=> addToPlayListHandler(list.name, item)}>
 									{list.name}
-								</SelectItem>)}
+								</option>)
 							)
 						}
 						
-						</Select> :
-						<span> No tienes Playlist aun</span>}
-						</div>): 
-						<span className="bg-teal-400 text-rose-50 border-2 border-violet-900 px-2 py-3 rounded-xl">Login for more acctions </span>}
+						</select>
+				
+						</div>}
+					
 					{isDetail && <Button className={`${canDelete ? 'block': 'hidden'}`} size="sm" variant="primary" onClick={() => navigate(`/update/${item._id}`)}>
 								Edit Video
 							</Button>}

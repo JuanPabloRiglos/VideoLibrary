@@ -11,7 +11,7 @@ import { useEffect } from "react";
 
 export default function PrincipalDashboard (){
     const {addVideoUserDbStore} = useUserDataHandler()
-    const {allVideosDb}= PlaylistStore()
+    const {allVideosDb,playlists }= PlaylistStore()
     const {userLogged}= UserStore()
     const {useFetchVideos} = useApiHook()
     const {data, isLoading} = useFetchVideos()
@@ -21,7 +21,7 @@ export default function PrincipalDashboard (){
        
         addVideoUserDbStore(allVideosDb)
       
-    },[ allVideosDb])
+    },[allVideosDb, playlists])
     return(
         <section className="h-dvh w-4/5 mx-auto flex flex-col md:w-full md:grid grid-cols-2 bg-fuchsia-50">
             <div className="flex flex-col gap-1 alin p-1">

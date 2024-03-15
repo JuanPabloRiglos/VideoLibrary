@@ -17,11 +17,7 @@ export function useUserDataHandler(){
 
     // =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= Trabajo sobre videos en el usuario =-=-=-=-=-=-=-=-
     const addVideoUserDbStore = async (allVideos:Video[])=>{ // tambien termina siendo una edicion 
-        console.log('todos los videos de la app :', allVideos)
-        console.log('saque el utimo video que me llego, es :',allVideos)
         const updatedUservideos = allVideos.filter(video => video.owners?.includes(userLogged._id))
-        console.log('filtrados por id del usuario', updatedUservideos)
-
         if(updatedUservideos.length === userLogged.videos?.length){
             console.log('los videos del usuario estan actualizados')
             return
@@ -30,8 +26,6 @@ export function useUserDataHandler(){
              addUserLogged(updatedUser)
              editeUser.mutate(updatedUser)
         }
-
-
     }
 
     const editedVideoUserDbStore =(video : Video)=>{
@@ -80,5 +74,36 @@ const addPlToUserDb= (newList: string)=>{
     
 }
 
-    return {editUserStoreYDb, addVideoUserDbStore, editedVideoUserDbStore, canDeleteVideo, userDbDeleteVideo, addPlToUserDb}
+const deletePlToUserDb= (listToDl: string)=>{
+    console.log('llega al deletePL esto', listToDl)
+    const oldsPl = userLogged.playlists
+    const updatedPl = oldsPl.filter(pl => pl.name != listToDl)
+    const updatedUser : user = {...userLogged, playlists: [...updatedPl]}
+    addUserLogged(updatedUser)
+    editeUser.mutate(updatedUser)
+    
+}
+
+const addVideoToUsrPl= (plName:string, videoId:string)=>{
+
+    const plToUpdate = userLogged.playlists.findIndex(pl=> pl.name == plName)
+   if (plToUpdate < 0 ){
+    console.log('no se encontro la playlist')
+   } else{
+    const isInPL = userLogged.playlists[plToUpdate].content.includes(videoId)
+    let contentIndex = userLogged.playlists[plToUpdate].content.length 
+     contentIndex > 0 ? contentIndex = contentIndex-1 : contentIndex
+    !isInPL ? userLogged.playlists[plToUpdate].content[contentIndex] = videoId :
+    console.log('el video ya estaba en la lista del usuario')
+   }
+
+   // AGREGAR TOPIC A LOS VIDEOS ACA PARA QUE QUEDE SINCRONIZADO
+   const videoIndex = userLogged.videos?.findIndex(video => video._id == videoId)
+   userLogged.videos[videoIndex].topyc = plName
+   
+   addUserLogged(userLogged)
+   editeUser.mutate(userLogged)
+}
+
+    return {editUserStoreYDb, addVideoUserDbStore, editedVideoUserDbStore, canDeleteVideo, userDbDeleteVideo, addPlToUserDb, deletePlToUserDb , addVideoToUsrPl}
 }
