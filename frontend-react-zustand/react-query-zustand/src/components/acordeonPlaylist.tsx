@@ -6,23 +6,21 @@ import { Accordion, AccordionBody, AccordionHeader, Button } from "@tremor/react
 import { useNavigate } from "react-router-dom";
 import { useSweetAlert } from "../hooks/useSweetAlert";
 import { useUserDataHandler } from "../hooks/useUserDataHandler";
+import { Playlist } from "../hooks/types";
 
 
 export function AccordionPlayList() { 
   const {addPlToUserDb, deletePlToUserDb}= useUserDataHandler()
   const {userLogged} = UserStore()
   const {addPlaylist, playlists, sincreonizeListContent} = PlaylistStore()
-  const [playlistToRender, setPlayListToRender]= useState (null)
+  const [playlistToRender, setPlayListToRender]= useState <Playlist[]| null> (null)
   const [newListName, setNewListName] = useState<string>('')
   const navigate = useNavigate()
   const storageplCount = playlists.length
   const {SweetAlertDeletePL}= useSweetAlert()
 
 useEffect(()=>{
-  console.log(' soy el useEfect del acordeon, me volvi a ejecutar porque cambiaron las playlist, si no se ve, no es problema mio');
-
 userLogged.email != '' ? setPlayListToRender([...userLogged.playlists]) : setPlayListToRender([...playlists])
-
 },[playlists, userLogged])
 
 const submiDeleteList = (listToDelete:string) =>{

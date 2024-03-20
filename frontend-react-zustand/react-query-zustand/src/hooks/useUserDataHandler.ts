@@ -85,20 +85,27 @@ const deletePlToUserDb= (listToDl: string)=>{
 }
 
 const addVideoToUsrPl= (plName:string, videoId:string)=>{
-
-    const plToUpdate = userLogged.playlists.findIndex(pl=> pl.name == plName)
+    console.log('estoy en el addvideo to user pl y llega esto', plName, videoId)
+    const plToUpdate : number = userLogged.playlists.findIndex(pl=> pl.name == plName)
+    console.log('el indice segun el nombre de la lista es, ', plToUpdate)
    if (plToUpdate < 0 ){
     console.log('no se encontro la playlist')
    } else{
-    const isInPL = userLogged.playlists[plToUpdate].content.includes(videoId)
-    let contentIndex = userLogged.playlists[plToUpdate].content.length 
-     contentIndex > 0 ? contentIndex = contentIndex-1 : contentIndex
-    !isInPL ? userLogged.playlists[plToUpdate].content[contentIndex] = videoId :
-    console.log('el video ya estaba en la lista del usuario')
+    const isInPL = userLogged.playlists[plToUpdate].content.includes(videoId);
+    console.log('esta agregado a la pl', isInPL)
+    const contentIndex : number = userLogged.playlists[plToUpdate].content.length 
+    console.log('content puntoLength, e index', contentIndex)
+   if(!isInPL){ // si el video no esta, lo agrega al array
+    userLogged.playlists[plToUpdate].content[contentIndex] = videoId }
+else{   // si el video esta, deberia
+      console.log('el videoantes de sacarlo de la lista', userLogged)
+    userLogged.playlists[plToUpdate].content = userLogged.playlists[plToUpdate].content.filter(id => id != videoId)
+    console.log('el video ya estaba en la lista del usuario', userLogged)
    }
-
+   }
    // AGREGAR TOPIC A LOS VIDEOS ACA PARA QUE QUEDE SINCRONIZADO
-   const videoIndex = userLogged.videos?.findIndex(video => video._id == videoId)
+   const videoIndex : number = userLogged.videos!.findIndex(video => video._id == videoId)
+   userLogged.videos![videoIndex].topyc.includes(plName) ? userLogged.videos![videoIndex].topyc = '' :
    userLogged.videos[videoIndex].topyc = plName
    
    addUserLogged(userLogged)

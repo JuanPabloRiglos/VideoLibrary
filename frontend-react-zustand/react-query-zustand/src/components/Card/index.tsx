@@ -14,14 +14,15 @@ import { useUserDataHandler } from "../../hooks/useUserDataHandler.ts";
 import { useSweetAlert } from "../../hooks/useSweetAlert.ts";
 
 type PorpsCard = {
-	item: Video,
+	item: Video
+	// setChange: (arg:boolean)=> void;
 };
 
-export function CardToRender({ item }: PorpsCard) {
+export function CardToRender({ item }: PorpsCard) {//setChange
 	const {userLogged}= UserStore()
-	const {canDeleteVideo} = useUserDataHandler()
+	const {canDeleteVideo, addVideoToUsrPl} = useUserDataHandler()
 	const [canDelete, setCanDelete]= useState <boolean>(false)
-	const [playListSelect, setPlayListSelect] = useState<string>("Add to one of your's playlist ")
+	const [playListSelect, setPlayListSelect] = useState<string>("")
 	const { editedVideo } = useApiHook()
 	const {SweetAlertForDelete} = useSweetAlert()
 	let isDetail = ''
@@ -33,7 +34,7 @@ export function CardToRender({ item }: PorpsCard) {
 	const navigate = useNavigate()
 	
 //trabajo de zustand
-	// const {addVideoToList} = PlaylistStore() 
+	 const {addVideoToList, removeVideoToList} = PlaylistStore() 
 	const {playlists} =PlaylistStore()
 	
 
@@ -42,18 +43,32 @@ useEffect(()=>{
 	const userCan = canDeleteVideo(item)
 	setCanDelete(userCan)
 // eslint-disable-next-line react-hooks/exhaustive-deps
-},[userLogged])
+},[userLogged, item])
 
-const addToPlayListHandler = (listName:string, item : Video) =>{
-	 const videoForEdit : Video = { ...item, topyc:listName}
-	editedVideo.mutate(videoForEdit)
-    toast.success('Video edited whit succes!')
-	 addVideoToList(listName, item._id)
-}
+const addtPlayListHandler =  async (listName:string, item : Video) =>{
+	
+	const videoForEdit : Video = { ...item, topyc:listName}
+	addVideoToUsrPl(listName, item._id!)// edita al usuario agregando y borrando de la lista. Tambien Modifica el video poniendole o sacandole el topyc
+ 	editedVideo.mutate(videoForEdit)//edita al video para que quede en sincronia con el user.video
+	 toast.success('Video edited whit succes!')
+	 addVideoToList(listName, item._id!)
+ }
+
+
+ const deletePlayListHandler =  async (listName:string, itemToRemove : Video) =>{
+	
+	 const videoForEdit : Video = { ...itemToRemove, topyc:listName}
+	addVideoToUsrPl(listName, itemToRemove._id!)// edita al usuario agregando y borrando de la lista. Tambien Modifica el video poniendole o sacandole el topyc
+ 	 editedVideo.mutate({...videoForEdit, topyc:''})//edita al video para que quede en sincronia con el user.video
+	toast.success('Video edited whit succes!')
+	removeVideoToList(listName, itemToRemove._id!)
+	// setChange(true)
+ }
+
 
 	return (
-		<div key={item._id} className="w-4/5 m-auto md:w-10/12 min-w-80 ">
-			<article className='m-auto p-4 rounded-2xl w-4/5 hover:w-5/5 h-full flex flex-col justify-around gap-4 cursor-pointer bg-slate-900 hover:border-4 hover:border-teal-400 hover:bg-violet-900 border-rose-900 border-4 shadow-xl' >
+		<div key={item._id} className="w-4/5 m-auto md:w-10/12 min-w-80 border-2 border-red-500">
+			<article className='m-auto p-4 rounded-2xl w-4/5 hover:w-5/5 h-full flex flex-col justify-around gap-4 cursor-pointer bg-slate-900 hover:border-4 hover:border-teal-400 hover:bg-violet-900 border-rose-900 border-4 shadow-xl ' >
 				<Metric style={{color:'white'}} onClick={()=> navigate(`/detail/${item._id}`)}>{item.title}</Metric>
 				<p className="text-slate-200 text-sm">{item.description}</p>
 				<div className="overflow-hidden rounded-md">
@@ -62,29 +77,34 @@ const addToPlayListHandler = (listName:string, item : Video) =>{
 				</div>
 				<div className="flex flex-wrap gap-1 justify-between overflow-hidden">
 				{item.topyc ?  <Badge className="truncate text-clip">{`In ${item.topyc} playlist`}</Badge> :
-						<div className=" w-3/5 space-y-6 max-h-32 overflow-scroll">
-							<select className="w-full h-fit overflow-visible  p-2 px-3 border-2 border-violet-900 text-rose-50 bg-teal-700 hover:border-rose-900 hover:text-rose-900 rounded-xl" value={playListSelect}  onChange={(event) => setPlayListSelect(event.target.value)}>
-							<option  value={playListSelect}>
-									{playListSelect}
-								</option>
-							{ userLogged.playlists.map((list, i)=>(
-								<option key={i} value={list.name} onClick={()=> addToPlayListHandler(list.name, item)}>
-									{list.name}
-								</option>)
+						<div className="">
+							<Select value={playListSelect} onValueChange={setPlayListSelect}>
+							{ userLogged.playlists.map((list)=>(
+								// <option key={i} value={list.name} onClick={()=> addToPlayListHandler(list.name, item)}>
+								// 	{list.name}
+								// </option>
+								<SelectItem value={list.name} onClick={()=> addtPlayListHandler(list.name, item)}>
+								{list.name}
+							</SelectItem>
+								)
 							)
 						}
 						
-						</select>
+						</Select>
 				
 						</div>}
 					
 					{isDetail && <Button className={`${canDelete ? 'block': 'hidden'}`} size="sm" variant="primary" onClick={() => navigate(`/update/${item._id}`)}>
 								Edit Video
 							</Button>}
-							
-				<Button className={`${canDelete ? 'block': 'hidden'}`} size="sm" variant="primary" color="red" onClick={()=> SweetAlertForDelete(item._id!)}>
+						<div className="flex justify-between">	
+							{ item.topyc && <Button className={`${canDelete ? 'block': 'hidden'}`} size="xs" variant="primary" color='red' onClick={() => deletePlayListHandler(item.topyc !, item)}>
+								Remove from Playlist
+							</Button>}		
+
+				<Button className={`${canDelete ? 'block': 'hidden'}`} size="xs" variant="primary" color="red" onClick={()=> SweetAlertForDelete(item._id!)}>
 					Delete
-				</Button>
+				</Button> </div>
 				</div>
 			</article>
 		</div>

@@ -7,7 +7,7 @@ import { ModalToUserHandler } from "../../components/userForms/loggInForm";
 import { UserStore } from "../../ZustandStore/userStore";
 import { PlaylistStore } from "../../ZustandStore/playlistStore";
 import{ useUserDataHandler} from '../../hooks/useUserDataHandler'
-import { useEffect } from "react";
+import { useEffect, memo } from "react";
 
 export default function PrincipalDashboard (){
     const {addVideoUserDbStore} = useUserDataHandler()
@@ -15,7 +15,7 @@ export default function PrincipalDashboard (){
     const {userLogged}= UserStore()
     const {useFetchVideos} = useApiHook()
     const {data, isLoading} = useFetchVideos()
-  
+    const MemoMiniCard = memo(MiniCard)
 
     useEffect(()=>{
        
@@ -23,7 +23,7 @@ export default function PrincipalDashboard (){
       
     },[allVideosDb, playlists])
     return(
-        <section className="h-dvh w-4/5 mx-auto flex flex-col md:w-full md:grid grid-cols-2 bg-fuchsia-50">
+        <section className="h-dvh w-4/5 mx-auto flex flex-col md:w-full md:grid grid-cols-2 bg-rose-50 border-2 ">
             <div className="flex flex-col gap-1 alin p-1">
                 <div> 
             <SercherComponent/>
@@ -45,14 +45,14 @@ export default function PrincipalDashboard (){
                 (userLogged.email != '' ?
                 userLogged.videos?.map(item=>{
                     return ( 
-                        <MiniCard key={item._id} item={item}/>
+                        <MemoMiniCard key={item._id} item={item}/>
                     )
                 }
             )
            :
            data?.map(item=>{
             return ( 
-                <MiniCard key={item._id} item={item}/>
+                <MemoMiniCard key={item._id} item={item}/>
             )
         }
     )

@@ -13,7 +13,7 @@ export interface user{
     createdAt?:string,
     updatedAt?:string,
     _id:string,
-    playlists: []| [{name:string, content: [string] | []}],
+    playlists: []| [{name:string, content: [string] | [] | string[]}],
     videos?:Video[],
     followers?:string[],
     followed?:string[],

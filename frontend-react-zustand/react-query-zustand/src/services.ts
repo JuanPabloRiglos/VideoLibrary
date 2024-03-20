@@ -30,7 +30,15 @@ export const deleteVideo = async(id : string) =>{
     console.log('error en el borrado de video', err)
   }}
 
-export const updatedVideo = async(video:Video | VideoToSave) => { await api.put<Video>(`/${video._id}`, video)}
+export const updatedVideo = async(video:Video | VideoToSave) => {
+  console.log('que recibe el edit video', video)
+  try{
+    const response = await api.put<Video>(`/${video._id}`, video)
+    console.log('respuesta del video mutate', response)
+  }catch (err){
+    console.log('error ene el video updated', err)
+  } 
+}
 
 // =-=-=-=-=-=-=-=-=-=-=-=-= consumo de user api =-=-=-=-=-=-=-=-=-=-=-//
 export const addUser = async(user : user)=>{ 

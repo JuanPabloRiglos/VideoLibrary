@@ -31,7 +31,7 @@ export default function VideoDetail(){
     const {SweetAlertForDelete} = useSweetAlert()
 
     //trabajo de zustand
-	const {addVideoToList} = PlaylistStore() 
+	const {addVideoToList, removeVideoToList} = PlaylistStore() 
 
 
   async function fetchVideoDetailData() {
@@ -54,14 +54,28 @@ export default function VideoDetail(){
     // eslint-disable-next-line react-hooks/exhaustive-deps
     },[videoDetail, setCanDelete])
 
-    const addToPlayListHandler = (listName:string, item : Video) =>{
+   
+    const addtPlayListHandler =  async (listName:string, item : Video) =>{
+	
       const videoForEdit : Video = { ...item, topyc:listName}
-      addVideoToUsrPl(listName, item._id)
-       editedVideo.mutate(videoForEdit)
+      addVideoToUsrPl(listName, item._id!)// edita al usuario agregando y borrando de la lista. Tambien Modifica el video poniendole o sacandole el topyc
+       editedVideo.mutate(videoForEdit)//edita al video para que quede en sincronia con el user.video
        toast.success('Video edited whit succes!')
-     addVideoToList(listName, item._id)
-   }
-const deleteVideo=(id)=>{
+       addVideoToList(listName, item._id!)
+     }
+    
+    
+     const deletePlayListHandler =  async (listName:string, id : string) =>{
+      
+    
+      addVideoToUsrPl(listName, id!)// edita al usuario agregando y borrando de la lista. Tambien Modifica el video poniendole o sacandole el topyc
+       editedVideo.mutate({...videoDetail, topyc:''})//edita al video para que quede en sincronia con el user.video
+      toast.success('Video edited whit succes!')
+      removeVideoToList(listName, id!)
+     }
+
+
+const deleteVideo=(id: string)=>{
   SweetAlertForDelete(id)
   navigate('/')
 }
@@ -82,7 +96,7 @@ const deleteVideo=(id)=>{
 							<Select className="w-full" value={playListSelect} onValueChange={setPlayListSelect}>
                 
 							{ userLogged.playlists.map(list=>
-								<SelectItem value={list.name} onClick={()=> addToPlayListHandler(list.name, videoDetail)}>
+								<SelectItem value={list.name} onClick={()=> addtPlayListHandler(list.name, videoDetail)}>
 									{list.name}
 								</SelectItem>
 							)
@@ -94,6 +108,10 @@ const deleteVideo=(id)=>{
 								Edit Video
 							</button>
 							
+              <button className={`${canDelete && videoDetail.topyc ? 'block': 'hidden'}  w-1/3 rounded-lg p-2 bg-rose-600 text-white border-2 border-rose-800 hover:bg-rose-900`}  color="red" onClick={()=> deletePlayListHandler(videoDetail.topyc! ,videoDetail._id)}>
+					Remove from playlist
+				</button>      
+
 				<button className={`${canDelete == true ? 'block': 'hidden'}  w-1/3 rounded-lg p-2 bg-rose-600 text-white border-2 border-rose-800 hover:bg-rose-900`}  color="red" onClick={()=> deleteVideo(videoDetail._id)}>
 					Delete
 				</button>
