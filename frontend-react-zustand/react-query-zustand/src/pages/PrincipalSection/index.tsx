@@ -17,7 +17,7 @@ useEffect(()=>{
 },[allVideosDb])
 
     return( 
-    <section className='bg-rose-50 border-2 mt-auto w-full h-screen flex flex-wrap lg:grid grid-cols-3 gap-1 rounded-sm shadow overflow-scroll'>
+    <section className='bg-rose-50 border-2 mt-auto w-full h-screen py-4 gap-2 flex flex-wrap lg:grid grid-cols-2 md:gap-1 rounded-sm shadow overflow-scroll'>
     {videoToRender?.map((item : Video) => (
     <MemoCardToRender key={item._id} item={item}
     //  setChange={setChange}

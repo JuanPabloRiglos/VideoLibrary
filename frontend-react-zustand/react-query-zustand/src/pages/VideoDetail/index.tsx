@@ -81,20 +81,20 @@ const deleteVideo=(id: string)=>{
 }
     return(
       <>
-        <section key={videoDetail._id} className="w-4/5 m-auto md:w-full min-w-80">
-			<Card className='flex flex-col lg:flex-row' >
+        <section key={videoDetail._id} className="w-4/5 m-auto mt-1 md:w-full md:mt-4 min-w-80">
+			<Card className='flex flex-col gap-2 lg:flex-row' >
 				<div className="w-full lg:w-1/2 h-full overflow-hidden rounded-md">
+        <Metric className="h-1/6 align-top mb-3">{videoDetail.title}</Metric>
 				<ReactPlayer style={{maxWidth:'100%'}} url={videoDetail.url}/>	
         </div>
-				
+			
 				<section className="w-4/5 m-auto lg:w-2/5 h-full flex flex-col gap-10"> 
-				<Metric className="h-1/6 align-top mb-3">{videoDetail.title}</Metric>
+	
 				<Text className="h-3/6 align-top mb-3">{videoDetail.description}</Text>
-        <div className=" h-fit flex flex-wrap lg:h-2/6 align-top gap-3  justify-around"> 
+        <div className=" h-fit flex flex-wrap lg:h-2/6 align-top gap-3 justify-around "> 
 				{videoDetail.topyc ?  <Badge className="w-fit rounded-lg">{`In ${videoDetail.topyc} playlist`}</Badge> :
-						<div className="w-1/2 space-y-6">{userLogged.email != ''?
+						<div className="w-full md:w-1/2 space-y-6">{userLogged.email != ''?
 							<Select className="w-full" value={playListSelect} onValueChange={setPlayListSelect}>
-                
 							{ userLogged.playlists.map(list=>
 								<SelectItem value={list.name} onClick={()=> addtPlayListHandler(list.name, videoDetail)}>
 									{list.name}
@@ -104,18 +104,18 @@ const deleteVideo=(id: string)=>{
 						</Select>:
             <span className="p-2 border-2 border-violet-900 bg-rose-700 text-white rounded-xl">Login for more Actions</span>}
 						</div>}
-				<button className={`${canDelete == true ? 'block': 'hidden'}  w-1/3 rounded-lg p-2 bg-teal-600 text-white border-2 border-teal-700 hover:bg-teal-400`}  onClick={() => navigate(`/update/${videoDetail._id}`)}>
+				<button className={`${canDelete == true ? 'block': 'hidden'} w-full md:w-1/3 rounded-lg p-2 bg-teal-600 text-white border-2 border-teal-700 hover:bg-teal-400`}  onClick={() => navigate(`/update/${videoDetail._id}`)}>
 								Edit Video
 							</button>
 							
-              <button className={`${canDelete && videoDetail.topyc ? 'block': 'hidden'}  w-1/3 rounded-lg p-2 bg-rose-600 text-white border-2 border-rose-800 hover:bg-rose-900`}  color="red" onClick={()=> deletePlayListHandler(videoDetail.topyc! ,videoDetail._id)}>
+              <button className={`${canDelete && videoDetail.topyc ? 'block': 'hidden'} w-full md:w-1/3 lg:w-11/12 rounded-lg p-2 lg:mt-2 bg-rose-600 text-white border-2 border-rose-800 hover:bg-rose-900`}  color="red" onClick={()=> deletePlayListHandler(videoDetail.topyc! ,videoDetail._id !)}>
 					Remove from playlist
 				</button>      
 
-				<button className={`${canDelete == true ? 'block': 'hidden'}  w-1/3 rounded-lg p-2 bg-rose-600 text-white border-2 border-rose-800 hover:bg-rose-900`}  color="red" onClick={()=> deleteVideo(videoDetail._id)}>
+        </div>
+				<button className={`${canDelete == true ? 'block': 'hidden'} self-center -mt-6 md:-ml-6 w-full md:w-1/3 rounded-lg lg:-ml-0 lg:w-11/12 p-2 bg-rose-600 text-white border-2 border-rose-800 hover:bg-rose-900`}  color="red" onClick={()=> deleteVideo(videoDetail._id !)}>
 					Delete
 				</button>
-        </div>
 				</section>
 			</Card> 
       

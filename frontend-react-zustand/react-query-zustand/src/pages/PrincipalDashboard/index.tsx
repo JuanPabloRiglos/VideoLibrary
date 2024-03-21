@@ -1,6 +1,7 @@
 import { useApiHook } from "../../hooks/useApi";
 // import { Metric,Divider} from '@tremor/react'
 import { AccordionPlayList } from "../../components/acordeonPlaylist";
+import {UserItem} from "../../components/UserItem/index.jsx"
 import { MiniCard } from "../../components/miniCard";
 import { SercherComponent } from "./sercherComponent";
 import { ModalToUserHandler } from "../../components/userForms/loggInForm";
@@ -23,7 +24,7 @@ export default function PrincipalDashboard (){
       
     },[allVideosDb, playlists])
     return(
-        <section className="h-dvh w-4/5 mx-auto flex flex-col md:w-full md:grid grid-cols-2 bg-rose-50 border-2 ">
+        <section className="h-fit md:h-dvh w-full mx-auto flex flex-col xl:w-4/5 md:grid grid-cols-2 bg-rose-50 border-2 overflow-hidden">
             <div className="flex flex-col gap-1 alin p-1">
                 <div> 
             <SercherComponent/>
@@ -31,7 +32,12 @@ export default function PrincipalDashboard (){
             <div> 
             <h2 className="m-auto font-bold text-2xl  my-2 text-center" >{userLogged.email? ' See your Playlists' : ' See all ours Playlists' }</h2>
             
-            <AccordionPlayList/>
+            {userLogged.email !='' ? <AccordionPlayList/>:
+            <section> 
+
+                <UserItem/> // Renderizar los usuarios
+            </section>
+            }
             </div>
             </div>
             <main className="flex flex-col py-2 gap-1 overflow-scroll rounded-xl realitve"> 

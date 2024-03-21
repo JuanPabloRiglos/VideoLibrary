@@ -69,7 +69,7 @@ const handleClose = () => {setAnchorEl(null);};
       </Menu>
     </div>
     {/* // Palet color-> fuchsia-100 teal-400 teal-500 teal-700 violet-900  */}
-        <ul className="hidden sm:flex  justify-around space-x-3 h-12 my-auto">
+        <ul className="hidden sm:flex  justify-around space-x-3 h-12 my-auto md:ml-2">
          <li  className=' block px-3 py-2 rounded-md bg-teal-400 text-white  border-violet-900  hover:bg-violet-900  hover:border-teal-400 border-2 font-semibold transition-all items-center mt-1'> <Link to='/'> Home</Link>
       </li>
          <li  className=' block px-3 py-2 rounded-md bg-teal-400 text-white border-violet-900 hover:bg-violet-900  hover:border-teal-400 border-2 font-semibold transition-all items-center mt-1'>
@@ -83,14 +83,14 @@ const handleClose = () => {setAnchorEl(null);};
         {/* // Palet color->  fuchsia-100 teal-400 teal-500 teal-700 violet-900 */}
           {userLogged.email != '' ?
           //reenderiza si hay alguien logeado
-            <div className="xs:4/5 md:2/5 xl:w-1/5 rounded-md flex justify-between gap-2 items-center ">
+            <div className="xs:4/5 md:2/5 xl:w-1/3 rounded-md flex justify-between xl:justify-center gap-2 items-center ">
               
              <div className={`flex pl-1 h-14 border-2 rounded-2xl border-teal-400  bg-violet-900  ${logginModal == true ? 'hidden': 'block'} hover:cursor-pointer` } onClick={()=> navigate('/userPerfil')} >
             <span className="m-auto pl-2 font-semibold text-lg text-slate-100">{userLogged.firstName} {userLogged.lastName}</span>
            {userLogged.img ?<Avatar src={userLogged.img} alt={userLogged.firstName} className="mt-2 ml-2 h-full w-1/5 rounded-full"  sx={{marginTop:'-3%', marginRight:'-5%',  width: 62, height: 62}}/>  : 
            <Avatar sx={{marginTop:'-3%', marginRight:'-5%',  width: 62, height: 62}} src="/broken-image.jpg" />}
              </div>
-            <div className="hidden sm:block">
+            <div className="hidden sm:block ml-2">
               <img src={loggoutIcon}  className="h-8 w-8 hover:cursor-pointer hover:h-10 hover:w-10" onClick={loggOutSet}/>
             </div>
            </div>

@@ -20,5 +20,5 @@ export interface Playlist{
     name: string;
     content: {
         id: string;
-    }[];
+    };
 }

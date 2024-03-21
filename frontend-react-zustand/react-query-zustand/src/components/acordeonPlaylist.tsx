@@ -16,10 +16,14 @@ export function AccordionPlayList() {
   const [playlistToRender, setPlayListToRender]= useState <Playlist[]| null> (null)
   const [newListName, setNewListName] = useState<string>('')
   const navigate = useNavigate()
-  const storageplCount = playlists.length
+  // const storageplCount = playlists.length
   const {SweetAlertDeletePL}= useSweetAlert()
+console.log('listas del usuario',userLogged.playlists)
+console.log('listas general', playlists)
+
 
 useEffect(()=>{
+  
 userLogged.email != '' ? setPlayListToRender([...userLogged.playlists]) : setPlayListToRender([...playlists])
 },[playlists, userLogged])
 
@@ -39,11 +43,12 @@ console.log('las playlist en el store, desde acordeon, son :',playlists)
     return( 
         <section className="mx-auto overflow-scroll bg-rose-50 p-6 border-2 hover:shadow-2xl rounded-2xl" style={{maxHeight:'500px'}}>
   <section className="w-full max-h-64 overflow-scroll rounded-xl border-2 " >
-    {playlistToRender?.map((platylist, i) =>{
+    { playlistToRender?.length > 0 &&
+    playlistToRender?.map((platylist, i) =>{
         return (
  <Accordion key={i} className="border border-teal-700">
  <AccordionHeader className=" bg-rose-600 font-semibold text-white">{platylist.name}</AccordionHeader>
- <AccordionBody className="flex gap-4 bg-rose-600 " >
+ <AccordionBody className="flex flex-col  gap-1 md:flex-row md:gap-4 bg-rose-600 " >
     <Button color='green' className="bg-teal-500 hover:bg-teal-700 border-violet-900 hover:border-violet-900 hover:shadow-xl transition-colors" onClick={()=>  navigate(`/search/list/${platylist.name}`)}> See the List </Button>
     <Button variant="primary" color="red" className=" bg-rose-500 hover:shadow-xl hover:bg-rose-800 border-violet-900 transition-colors" onClick={()=> submiDeleteList(platylist.name)}>
 					Delete Playlist

@@ -15,8 +15,8 @@ export function MiniCard ({item}:MiniCardProps){
     const navigate = useNavigate()
         {/* // Palet color-> fuchsia-100 teal-400 teal-500 teal-700 violet-900  */}
     return(
-        <article className='m-auto p-4 rounded-2xl w-4/5 h-full flex flex-col justify-around gap-4 cursor-pointer bg-teal-700 border-4 border-violet-900 hover:border-4 hover:border-teal-400 hover:bg-violet-900 transition-colors'  >
-				<Metric style={{color:'white'}} onClick={()=> navigate(`/detail/${item._id}`)}>{item.title}</Metric>
+        <article className='m-auto rounded-2xl w-11/12 p-2 h-fit md:w-4/5 md:p-4 md:h-full flex flex-col justify-around gap-4 cursor-pointer bg-teal-700 border-4  hover:border-4 hover:border-teal-400 hover:bg-violet-900 transition-colors shadow-2xl'  >
+				<Metric style={{color:'white'}} className="ml-3 -mb-8" onClick={()=> navigate(`/detail/${item._id}`)}>{item.title}</Metric>
 				<Divider/>
                 <div className="w-full h-full rounded-md overflow-hidden">
                 <ReactPlayer  width="100%"

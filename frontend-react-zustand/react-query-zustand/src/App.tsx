@@ -31,7 +31,7 @@ function App() {
 	return (
 		<>
 			<BrowserRouter>
-				<main className='container box-content m-auto py-2 h-screen w-screen overflow-hidden'>
+				<main className='container box-content m-auto py-2 h-screen w-screen overflow-scroll overflow-hidden'>
 				<Nav />
 					<Suspense fallback={<div className=" bg-slate-700 w-2/3 h-2/3 m-auto"> Loading... </div>}>
 					<Routes>

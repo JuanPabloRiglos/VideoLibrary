@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useEffect, useState, memo } from "react"
 import { useParams } from "react-router-dom"
 import { PlaylistStore } from "../../ZustandStore/playlistStore"
 import { useApiHook } from "../../hooks/useApi"
@@ -14,7 +14,7 @@ export default function SearchResult(){
     const {isError, error} = useFetchVideos()
     const params = useParams()
     const [filterData , setFilterData] = useState <Video[]>()
-   
+   const MemoCardToRender = memo(CardToRender)
     useEffect(()=>{
         let newData 
         if(data && params.listName){
@@ -31,9 +31,9 @@ export default function SearchResult(){
     if(filterData != undefined && filterData?.length == 0) return (<h2>No ha videos agregados a esta lista de reproduccion</h2>)
 
     return( 
-    <section className='w-full flex flex-wrap lg:grid grid-cols-2 gap-3 overflowy-scroll rounded-sm shadow '>
+    <section className='w-full pt-4 flex flex-wrap bg-rose-50 lg:grid grid-cols-2 gap-3 2xl:gap-6 overflowy-scroll rounded-sm shadow '>
     {filterData?.map((item) => ( 
-   <CardToRender item={item}/>
+   <MemoCardToRender item={item}/>
      ))}
 </section>)
 }

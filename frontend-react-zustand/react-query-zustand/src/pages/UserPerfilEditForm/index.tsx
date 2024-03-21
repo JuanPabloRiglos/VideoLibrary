@@ -39,17 +39,24 @@ export default function UserPerfilEdit() {
 	};
 
 	return (
-		<main className=' h-screen w-full border flex gap-2 bg-rose-50'>
+		<main className=' h-fit md:h-screen w-full border flex flex-col md:flex-row gap-2 bg-rose-50'>
 			<section className='h-full w-full flex flex-col '>
 				
 				<div className="mt-2 w-full h-4/6 flex flex-col justify-strech gap-2 items-center">
-				<div className=" mx-auto w-full flex flex-row justify-around gap-4 "> 
+				<div className=" mx-auto w-full flex flex-col items-center gap-2 md:flex-row md:justify-around md:gap-4 "> 
+				<div className="flex -ml-16 md:-ml-0 items-center justify-center"> 
 					<figure className="w-fit h-fit border-2 border-violet-900 rounded-full shadow-xl">
 						<Avatar src={userLogged.img? userLogged.img : '/broken-image.jpg'} sx={{height:136, width:136}}/>
+						
 					</figure>
-					<div className="  w-6/12 flex flex-col justify-around "> 
+					{/* articulo solo visto hasta md */}
+					<article className=" w-8/12 flex flex-col md:hidden ml-6 -mt-6 "> 
+					<span className="font-semibold text-sm text-teal-700"> Followers : <strong className="text-violet-900"> {userLogged.followers?.length}</strong>  </span>
+					<span className="font-semibold text-sm text-teal-700">Follows : <strong className="text-violet-900">{userLogged.followed?.length}</strong></span>
+					</article></div>
+					<div className=" w-11/12 md:w-fit flex flex-col justify-around "> 
 					<span className="w-11/12 font-semibold text-base border-2 p-2 m-auto  rounded-xl text-teal-700"> User : <strong className="text-violet-900 ">{userLogged.email}  </strong> - Videos :   <strong className="text-violet-900"> {userLogged.videos?.length} </strong></span>
-					<article className="ml-7 w-8/12 flex justify-around"> 
+					<article className="ml-7 w-8/12 hidden  md:flex justify-around "> 
 					<span className="font-semibold text-sm text-teal-700"> Followers : <strong className="text-violet-900"> {userLogged.followers?.length}</strong>  </span>
 					<span className="font-semibold text-sm text-teal-700">Follows : <strong className="text-violet-900">{userLogged.followed?.length}</strong></span>
 					</article>
@@ -61,8 +68,10 @@ export default function UserPerfilEdit() {
 				</section>
 					</div>
 			</section>
-			<section className='h-full  w-10/12 flex flex-col'>
-				<form className="w-4/6 mx-auto mt-10 flex flex-col gap-4" onSubmit={handleSubmit(onSubmitEdit)}>
+			<section className='h-full w-full md:w-10/12 flex flex-col md:pt-16'>
+				<h3 className=" font-bold text-2xl text-violet-900 mt-2 ml-10 border-b-2"> Change your user data </h3>
+				<form className="
+				w-11/12 items-center pb-2 md:w-4/6 mx-auto mt-10 flex flex-col gap-4" onSubmit={handleSubmit(onSubmitEdit)}>
 				<div className="flex flex-col justify-around">
             <TextField  type='text' label="Your Name"  
              color= "secondary"   {...register("firstName", {
@@ -129,21 +138,7 @@ export default function UserPerfilEdit() {
 			<div className="flex flex-col justify-around">
             <TextField  type='password' label="Your password"
              color= "secondary" 
-        //        {...register("password", {
-		// 		required: {
-		// 			value: true,
-		// 			message: "Debes completar el campo",
-		// 		},
-		// 	})}
-		// 	focused
-		// />
-		// {errors.password && (
-		// 	<span
-		// 		className='pl-2 pt-2 flex text-xs font-bold text-red-700'
-		// 		style={{ color: "red" }}
-		// 	>
-		// 		{errors.password.message}
-		// 	</span> )}
+      
 		value={userLogged.password}
 		focused
 		/>

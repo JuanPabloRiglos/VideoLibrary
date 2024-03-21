@@ -67,42 +67,52 @@ const addtPlayListHandler =  async (listName:string, item : Video) =>{
 
 
 	return (
-		<div key={item._id} className="w-4/5 m-auto md:w-10/12 min-w-80 border-2 border-red-500">
-			<article className='m-auto p-4 rounded-2xl w-4/5 hover:w-5/5 h-full flex flex-col justify-around gap-4 cursor-pointer bg-slate-900 hover:border-4 hover:border-teal-400 hover:bg-violet-900 border-rose-900 border-4 shadow-xl ' >
+		<div key={item._id} className="w-full m-auto md:w-10/12 min-w-96 " style={{ height:'600px'}}>
+			<article className='m-auto w-full p-4 rounded-2xl md:w-4/5 hover:w-5/5 h-full flex flex-col justify-around gap-4 cursor-pointer bg-slate-900 hover:border-4 hover:border-teal-400 hover:bg-violet-900 border-rose-900 border-4 shadow-xl ' >
 				<Metric style={{color:'white'}} onClick={()=> navigate(`/detail/${item._id}`)}>{item.title}</Metric>
-				<p className="text-slate-200 text-sm">{item.description}</p>
+				<p className="text-slate-200 text-sm truncate">{item.description}</p>
 				<div className="overflow-hidden rounded-md">
 
-				<ReactPlayer style={{maxWidth:'100%', borderRadius:'50px',width: `${isDetail && '300px'}`, height: `${isDetail && '200px'}`  }} url={item.url}/>	
+				<ReactPlayer style={{maxWidth:'100%', borderRadius:'50px'}} url={item.url}/>	
 				</div>
-				<div className="flex flex-wrap gap-1 justify-between overflow-hidden">
+				<div className="flex flex-col md:flex-row flex-wrap gap-1 justify-between overflow-scroll">
 				{item.topyc ?  <Badge className="truncate text-clip">{`In ${item.topyc} playlist`}</Badge> :
-						<div className="">
-							<Select value={playListSelect} onValueChange={setPlayListSelect}>
-							{ userLogged.playlists.map((list)=>(
-								// <option key={i} value={list.name} onClick={()=> addToPlayListHandler(list.name, item)}>
-								// 	{list.name}
-								// </option>
-								<SelectItem value={list.name} onClick={()=> addtPlayListHandler(list.name, item)}>
-								{list.name}
-							</SelectItem>
-								)
+				(<div className="h-fit mt-2">
+					{userLogged.email != ''?
+							<Select className="w-full" value={playListSelect} onValueChange={setPlayListSelect}>
+                
+							{ userLogged.playlists.map((list, i)=>
+							
+								 <SelectItem className=' z-50 overflow-scroll' value={list.name} key={i }onClick={()=> addtPlayListHandler(list.name, item)}>
+									{list.name}
+								</SelectItem>
 							)
 						}
+						</Select>:
+            <span className="p-1 border-2 border-violet-900 bg-rose-700 text-white rounded-xl">Login for more Actions</span>}
+				</div>)
+						// <Badge className="">
+						// 	<select className=" border-violet-900  bg-transparent font-normal py-1 px-1 ml-2 rounded-xl " value={playListSelect} onValueChange={setPlayListSelect}>
+						// 	{ userLogged.playlists.map((list)=>(
+						// 		// <option key={i} value={list.name} onClick={()=> addToPlayListHandler(list.name, item)}>
+						// 		// 	{list.name}
+						// 		// </option>
+						// 		<option className="h-fit rounded-xl bg-transparent my-2 text-violet-900 font-medium" value={list.name} onClick={()=> addtPlayListHandler(list.name, item)}>
+						// 		{list.name}
+						// 	</option>
+						// 		)
+						// 	)
+						// }
 						
-						</Select>
+						// </select>
 				
-						</div>}
-					
-					{isDetail && <Button className={`${canDelete ? 'block': 'hidden'}`} size="sm" variant="primary" onClick={() => navigate(`/update/${item._id}`)}>
-								Edit Video
-							</Button>}
-						<div className="flex justify-between">	
+						// </Badge>
+						}
+						<div className={`mt-2 w-full flex justify-between ${isDetail ?? 'border-4'}`}>	
 							{ item.topyc && <Button className={`${canDelete ? 'block': 'hidden'}`} size="xs" variant="primary" color='red' onClick={() => deletePlayListHandler(item.topyc !, item)}>
 								Remove from Playlist
 							</Button>}		
-
-				<Button className={`${canDelete ? 'block': 'hidden'}`} size="xs" variant="primary" color="red" onClick={()=> SweetAlertForDelete(item._id!)}>
+				<Button className={`${canDelete ? 'block': 'hidden'}`} size="md" variant="primary" color="red" onClick={()=> SweetAlertForDelete(item._id!)}>
 					Delete
 				</Button> </div>
 				</div>
