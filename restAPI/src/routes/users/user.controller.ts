@@ -4,7 +4,6 @@ import UserModel from './userModel'
 
  export const getUsers : RequestHandler = async(req, res)  => {
     try{
-
         const users = await UserModel.find()
         return res.json(users)
     }catch(err){
