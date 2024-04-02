@@ -1,7 +1,7 @@
 import { useApiHook } from "../../hooks/useApi";
-// import { Metric,Divider} from '@tremor/react'
+
 import { AccordionPlayList } from "../../components/acordeonPlaylist";
-import {UserItem} from "../../components/UserItem/index.jsx"
+import {UserItem} from "../../components/UserItem/index.jsx";
 import { MiniCard } from "../../components/miniCard";
 import { SercherComponent } from "./sercherComponent";
 import { ModalToUserHandler } from "../../components/userForms/loggInForm";
@@ -12,12 +12,13 @@ import { useEffect, memo } from "react";
 
 export default function PrincipalDashboard (){
     const {addVideoUserDbStore} = useUserDataHandler()
-    const {allVideosDb,playlists }= PlaylistStore()
-    const {userLogged}= UserStore()
+    const {allVideosDb,playlists}= PlaylistStore()
+    const {userLogged, allUser}= UserStore()
     const {useFetchVideos} = useApiHook()
     const {data, isLoading} = useFetchVideos()
+  
     const MemoMiniCard = memo(MiniCard)
-
+    console.log('en el dashboard todos los usuarios son ', allUser)
     useEffect(()=>{
        
         addVideoUserDbStore(allVideosDb)
@@ -30,12 +31,19 @@ export default function PrincipalDashboard (){
             <SercherComponent/>
             </div>
             <div> 
-            <h2 className="m-auto font-bold text-2xl  my-2 text-center" >{userLogged.email? ' See your Playlists' : ' See all ours Playlists' }</h2>
+            <h2 className="m-auto font-bold text-2xl  my-2 text-center" >{userLogged.email? ' See your Playlists' : 'Take a look at our users' }</h2>
             
             {userLogged.email !='' ? <AccordionPlayList/>:
-            <section> 
+            <section style={{maxHeight:'350px'}}  className=" border-2 p-1 overflow-scroll rounded-2xl shadow-2xl"> 
+                {
+                    allUser.length >0 ?
 
-                <UserItem/> // Renderizar los usuarios
+                    allUser.map(user =>{
+                       return <div> 
+                            <UserItem key={user._id} user={user} /> 
+                        </div>
+                    }) : <span> Cargando Usuarios, espere por favor... </span>
+                }
             </section>
             }
             </div>

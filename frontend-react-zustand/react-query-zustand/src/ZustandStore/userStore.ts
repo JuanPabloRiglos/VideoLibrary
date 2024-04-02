@@ -4,8 +4,10 @@ import { persist } from "zustand/middleware";
 
 
 interface userStoreState{
+    allUser: user[]| [] ,
     newUser: userLogginState,
-    userLogged : user
+    userLogged : user,
+    getAllUserFromDb: (users : user[])=> void,
     setNewUser: (email:string, password:string)=> void, 
     removeNewUser: ()=> void,
     addUserLogged: (usuario : user)=> void, 
@@ -13,6 +15,7 @@ interface userStoreState{
 }
 
 export const UserStore = create(persist<userStoreState>((set, get)=>({
+    allUser:[],
     newUser: { email: "", password: ""},
     userLogged:{
         _id:'',
@@ -29,6 +32,12 @@ export const UserStore = create(persist<userStoreState>((set, get)=>({
         owners: [""]}],
         followed:[],
         followers:[],
+    },
+    getAllUserFromDb:(users)=>{
+        console.log('en el storage llegan estos usuarios', users)
+        set(()=>({
+            allUser : users
+        }))
     },
     setNewUser:(email, password)=>{
         let {newUser} = get()

@@ -1,6 +1,6 @@
-// import { UseQueryResult, useQuery } from '@tanstack/react-query'
-import { addUser, getOneUser, updatedUser } from '../services'
-import { useMutation , useQueryClient} from  '@tanstack/react-query';
+
+import { addUser, getOneUser, updatedUser, getAllUsers} from '../services'
+import { useMutation , useQueryClient, UseQueryResult, useQuery} from  '@tanstack/react-query';
 import { user, userLogginState } from './types.users';
 
 export function useApiUsersHook(){
@@ -13,13 +13,13 @@ const useaddUser = useMutation({mutationFn: addUser,
 
 //edit
  const editeUser = useMutation({mutationFn: updatedUser, 
-    onSuccess:()=>{ queryClient.invalidateQueries({ queryKey: ['videos'] })}// compara el cache con la db, si hay cambios, pide data de nuevo  se renderiza en el useFetchVideos.
+    onSuccess:()=>{ queryClient.invalidateQueries({ queryKey: ['videos'] })}// LE HABIA DEJAO EL QUERYKEY EN VIDEOS, VER SI SE ROMPIO ALGO ==>  compara el cache con la db, si hay cambios, pide data de nuevo  se renderiza en el useFetchVideos.
 })
 
 
-//  function useFetchVideos(): UseQueryResult<user[]>{
-//     return useQuery( {queryKey:['videos'], queryFn:fetchVideos})
-// }
+ function useGetAllUsers(): UseQueryResult<user[]>{
+    return useQuery( {queryKey:['users'], queryFn:getAllUsers})
+}
 
 //login
 const getUser = async (userToLogin : userLogginState) : Promise<user | undefined >=>{
@@ -33,5 +33,5 @@ const getUser = async (userToLogin : userLogginState) : Promise<user | undefined
 //     queryClient.invalidateQueries({queryKey:['videos']})
 // }})
 
-return{  useaddUser,  getUser, editeUser}
+return{  useaddUser,  getUser, editeUser, useGetAllUsers}
 }

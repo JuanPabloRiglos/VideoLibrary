@@ -2,7 +2,9 @@ import  { useEffect, Suspense, lazy } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import { useApiHook } from "./hooks/useApi.ts";
+import { useApiUsersHook } from "./hooks/useApiUsers.ts";
 import { PlaylistStore } from "./ZustandStore/playlistStore.ts";
+import { UserStore } from "./ZustandStore/userStore.ts";
 import { Nav } from "./components/Nav/index.tsx";
 
 // elimino las importaciones explicitas como la de nav (que esta siempre) y las convierto en importaciones a demanda, para optimizar el renderizado. Importante, los componentes TIENEN que exportarse como DEFOULT, sino no se renderizan
@@ -12,17 +14,21 @@ const PrincipalSection = lazy(()=>import("./pages/PrincipalSection/index.tsx"));
 const Form = lazy(()=>import("./components/Form/index.tsx"));
 const VideoDetail = lazy(()=>import("./pages/VideoDetail/index.tsx"));
 const UserPerfilEdit = lazy(()=> import("./pages/UserPerfilEditForm/index.tsx"))
+const RestUserProfile = lazy(()=> import("./pages/RestUsersProfile/index.tsx"))
 
 function App() {
 
 	const {sincronizeListsInStoreWhitDb}= PlaylistStore()
+	const {getAllUserFromDb} = UserStore()
 	const {useFetchVideos}= useApiHook()
 	const {data, isLoading } = useFetchVideos();
+	const {useGetAllUsers}= useApiUsersHook()
+    const {data : userData} = useGetAllUsers()
 	useEffect(()=>{
-		
+		userData && getAllUserFromDb(userData)
 		data && sincronizeListsInStoreWhitDb(data);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	},[data])
+	},[data, userData])
 	if (isLoading) return <h2>Cargando ...</h2>;
 	
 
@@ -43,6 +49,7 @@ function App() {
 						<Route path='/update/:id' element={<Form />} />
 						<Route path='/detail/:id' element={<VideoDetail />} />
 						<Route path='/userPerfil' element={<UserPerfilEdit />} />
+						<Route path='/user/:id' element={< RestUserProfile/>} />
 					</Routes>
           <ToastContainer/>
 		</Suspense>

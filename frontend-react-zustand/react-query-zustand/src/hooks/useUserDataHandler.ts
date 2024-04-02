@@ -29,8 +29,6 @@ export function useUserDataHandler(){
     }
 
     const editedVideoUserDbStore =(video : Video)=>{
-      
-        
         const userVideos = [...userLogged.videos !] 
         const oldVideo = userVideos.findIndex(item => item.url == video.url)
       oldVideo != -1 ? userVideos[oldVideo]= video : console.log('no se encontro el video a editar')
@@ -40,7 +38,6 @@ export function useUserDataHandler(){
     }
 
     const canDeleteVideo = (item : Video)=>{
-   
         const userVideos = [...userLogged.videos !]
         const findItem = userVideos.findIndex(video => video.url == item.url)
         if(findItem != -1){
@@ -51,7 +48,6 @@ export function useUserDataHandler(){
     }
 
     const userDbDeleteVideo = (id : string)=>{
-    
         const userVideos = [...userLogged.videos !]
         console.log('que ha en los videos:,', userVideos)
         let fileredVideos;
@@ -71,7 +67,6 @@ const addPlToUserDb= (newList: string)=>{
     const updatedUser : user = {...userLogged, playlists: [...updatedPl]}
     addUserLogged(updatedUser)
     editeUser.mutate(updatedUser)
-    
 }
 
 const deletePlToUserDb= (listToDl: string)=>{
@@ -81,7 +76,6 @@ const deletePlToUserDb= (listToDl: string)=>{
     const updatedUser : user = {...userLogged, playlists: [...updatedPl]}
     addUserLogged(updatedUser)
     editeUser.mutate(updatedUser)
-    
 }
 
 const addVideoToUsrPl= (plName:string, videoId:string)=>{
@@ -112,5 +106,29 @@ else{   // si el video esta, deberia
    editeUser.mutate(userLogged)
 }
 
-    return {editUserStoreYDb, addVideoUserDbStore, editedVideoUserDbStore, canDeleteVideo, userDbDeleteVideo, addPlToUserDb, deletePlToUserDb , addVideoToUsrPl}
+const flollowHandler =(userToFollow) =>{
+    console.log('en el handler, usuario a seguir original', userToFollow)
+    console.log('user logged prev change', userLogged)
+
+   const isFollow =  userToFollow.followers.includes(userLogged._id);
+let updatedFollowers;
+let updTateFollows;
+  if (isFollow){ updatedFollowers = userToFollow.followers.filter(item => item != userLogged._id)
+    updTateFollows = userLogged.followed?.filter(item => item != userToFollow._id) }else {
+        updatedFollowers = [...userToFollow.followers, userLogged._id];
+        updTateFollows = [...userLogged.followed, userToFollow._id]
+}
+
+userToFollow.followers = [...updatedFollowers]
+userLogged.followed = [...updTateFollows]
+
+console.log('userToFollow update', userToFollow)
+console.log('user logged update', userLogged)
+
+    addUserLogged(userLogged)
+editeUser.mutate(userToFollow)
+   editeUser.mutate(userLogged)
+}
+
+    return {editUserStoreYDb, addVideoUserDbStore, editedVideoUserDbStore, canDeleteVideo, userDbDeleteVideo, addPlToUserDb, deletePlToUserDb , addVideoToUsrPl, flollowHandler}
 }

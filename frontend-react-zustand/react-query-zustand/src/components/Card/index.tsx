@@ -12,6 +12,8 @@ import { UserStore } from "../../ZustandStore/userStore.ts";
 import { useApiHook } from "../../hooks/useApi.ts";
 import { useUserDataHandler } from "../../hooks/useUserDataHandler.ts";
 import { useSweetAlert } from "../../hooks/useSweetAlert.ts";
+import { user } from "../../hooks/types.users.ts";
+import { Avatar } from "@mui/material";
 
 type PorpsCard = {
 	item: Video
@@ -19,10 +21,12 @@ type PorpsCard = {
 };
 
 export function CardToRender({ item }: PorpsCard) {//setChange
-	const {userLogged}= UserStore()
+	const {userLogged, allUser}= UserStore()
+	const [userOwner, setUserOwner] = useState <user | null>(null)
 	const {canDeleteVideo, addVideoToUsrPl} = useUserDataHandler()
 	const [canDelete, setCanDelete]= useState <boolean>(false)
 	const [playListSelect, setPlayListSelect] = useState<string>("")
+
 	const { editedVideo } = useApiHook()
 	const {SweetAlertForDelete} = useSweetAlert()
 	let isDetail = ''
@@ -42,6 +46,9 @@ export function CardToRender({ item }: PorpsCard) {//setChange
 useEffect(()=>{
 	const userCan = canDeleteVideo(item)
 	setCanDelete(userCan)
+ const owner = allUser.filter(user => user._id == item.owners[0])
+ setUserOwner(...owner)
+
 // eslint-disable-next-line react-hooks/exhaustive-deps
 },[userLogged, item])
 
@@ -64,12 +71,17 @@ const addtPlayListHandler =  async (listName:string, item : Video) =>{
 	removeVideoToList(listName, itemToRemove._id!)
 	// setChange(true)
  }
-
+console.log('dueno del video', userOwner)
 
 	return (
 		<div key={item._id} className="w-full m-auto md:w-10/12 min-w-96 " style={{ height:'600px'}}>
 			<article className='m-auto w-full p-4 rounded-2xl md:w-4/5 hover:w-5/5 h-full flex flex-col justify-around gap-4 cursor-pointer bg-slate-900 hover:border-4 hover:border-teal-400 hover:bg-violet-900 border-rose-900 border-4 shadow-xl ' >
+				<div className="w-full flex justify-between items-center">
 				<Metric style={{color:'white'}} onClick={()=> navigate(`/detail/${item._id}`)}>{item.title}</Metric>
+				<figure onClick={()=> navigate(`/user/${userOwner?._id}`)}>
+					<Avatar src={userOwner?.img ? userOwner.img : '/broken-image.jpg'} sx={{height:86, width:86}}/>
+				</figure>
+				</div>
 				<p className="text-slate-200 text-sm truncate">{item.description}</p>
 				<div className="overflow-hidden rounded-md">
 
@@ -79,7 +91,7 @@ const addtPlayListHandler =  async (listName:string, item : Video) =>{
 				{item.topyc ?  <Badge className="truncate text-clip">{`In ${item.topyc} playlist`}</Badge> :
 				(<div className="h-fit mt-2">
 					{userLogged.email != ''?
-							<Select className="w-full" value={playListSelect} onValueChange={setPlayListSelect}>
+							<Select className={`w-full ${canDelete ? 'block': 'hidden'}`} value={playListSelect} onValueChange={setPlayListSelect}>
                 
 							{ userLogged.playlists.map((list, i)=>
 							

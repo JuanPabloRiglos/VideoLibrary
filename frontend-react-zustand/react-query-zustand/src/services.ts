@@ -41,6 +41,18 @@ export const updatedVideo = async(video:Video | VideoToSave) => {
 }
 
 // =-=-=-=-=-=-=-=-=-=-=-=-= consumo de user api =-=-=-=-=-=-=-=-=-=-=-//
+
+export const getAllUsers = async()=>{ 
+  // console.log('entramos en la ejecucion del getAllUsers')
+  try{
+   const {data} = await apiUsers.get<Promise<user[]>>('/');
+  //  console.log('esto devolvieron todos los usuarios', data)
+   return data
+  }catch(err){
+    console.log('error en la creacion de usuarios :', err)
+  }
+  }
+
 export const addUser = async(user : user)=>{ 
   try{
    const {data} = await apiUsers.post<user>('/', user);
@@ -57,7 +69,7 @@ export const getOneUser = async(userToLogin : userLogginState ) : Promise<user |
     console.log('lo que devolvio el getOne fue :', data)
     return data
   }catch(err){
-    console.log('hay error al requerir un usuario:', )
+    console.log('hay error al requerir un usuario:', err)
     
   }
   // trabjar para que muestre cuando la password no coincide
