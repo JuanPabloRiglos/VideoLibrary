@@ -1,10 +1,11 @@
 import axios from "axios";
+const URL_ENV = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3444'
 
 export const api = axios.create({
-    baseURL :'http://localhost:3444/videos'
+    baseURL : `${URL_ENV}/videos` 
 });
 
 export const apiUsers = axios.create({
-    baseURL :'http://localhost:3444/users'
+    baseURL : `${URL_ENV}/users`
 });
 // BORRAR< SOLO PARA SABER COMO FUNCIONABA PARA EL PROyECTO  
