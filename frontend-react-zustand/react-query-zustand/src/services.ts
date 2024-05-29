@@ -45,11 +45,11 @@ export const updatedVideo = async(video:Video | VideoToSave) => {
 export const getAllUsers = async()=>{ 
   // console.log('entramos en la ejecucion del getAllUsers')
   try{
-   const {data} = await apiUsers.get<Promise<user[]>>('/');
+   const {data} = await apiUsers.get<Promise<user[]>>('/users');
   //  console.log('esto devolvieron todos los usuarios', data)
    return data
   }catch(err){
-    console.log('error en la creacion de usuarios :', err)
+    console.log('error en traer usuarios :', err)
   }
   }
 

@@ -15,6 +15,10 @@ app.use(express.json())
 app.use(express.urlencoded({extended:false}))
 
 //routes
+app.get('/', (req, res) => {
+    res.send('Bienvenido al Back de mylibrary App!');
+});
+
 app.use('/videos', videoRoutes)
 app.use('/users', userRoutes)
 
