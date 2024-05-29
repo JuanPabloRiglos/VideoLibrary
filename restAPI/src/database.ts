@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-require('dotenv').cofig()
+require('dotenv').config()
 
 
 const URIMONGO = process.env.DBURI 
