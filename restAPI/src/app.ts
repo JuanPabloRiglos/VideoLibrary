@@ -3,6 +3,7 @@ import cors  from "cors";
 import videoRoutes from './routes/videos/videos.rutes';
 import userRoutes from './routes/users/users.rutes'
 import morgan from "morgan";
+require('dotenv').cofig()
 const app = express();
 
 
